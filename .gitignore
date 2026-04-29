@@ -1,0 +1,25 @@
+# Dépendances Node
+node_modules/
+package-lock.json
+
+# Variables d'environnement (secrets)
+.env
+*.env.local
+
+# Stockage et logs
+backend/storage/
+backend/logs/
+*.log
+
+# Système
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Fichiers temporaires
+*.tmp
+*.swp
+test_doc.txt
