@@ -23,3 +23,7 @@ Thumbs.db
 *.tmp
 *.swp
 test_doc.txt
+
+# Fichiers de test temporaires
+faux.pdf
+*.test.pdf
