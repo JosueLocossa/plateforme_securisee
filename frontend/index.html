@@ -6,106 +6,208 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f8; color: #333; padding: 20px; }
-    .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 30px; }
-    h1 { color: #2c3e50; margin-bottom: 10px; }
+    .container { max-width: 1100px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 30px; }
+    h1, h2, h3 { color: #2c3e50; }
     .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 14px; }
-    .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; }
-    .badge-admin { background: #e74c3c; color: white; }
-    .badge-prof { background: #3498db; color: white; }
-    .badge-scolaire { background: #2ecc71; color: white; }
-    .badge-invite { background: #95a5a6; color: white; }
-    .login-section, .dashboard { margin-top: 20px; }
-    label { display: block; margin-bottom: 6px; font-weight: 600; color: #34495e; }
-    select, input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px; font-size: 14px; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-left: 8px; }
+    .badge-admin            { background: #e74c3c; color: white; }
+    .badge-administration   { background: #3498db; color: white; }
+    .badge-etudiant_interne { background: #2ecc71; color: white; }
+    .badge-prof             { background: #9b59b6; color: white; }
+    .badge-externe          { background: #f39c12; color: white; }
+    .badge-service          { background: #34495e; color: white; }
+
+    /* Login */
+    .login-section label { display: block; margin-bottom: 6px; font-weight: 600; color: #34495e; }
+    select, input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px; font-size: 14px; font-family: inherit; }
+    textarea { resize: vertical; min-height: 80px; }
     button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; }
     button:hover { background: #2980b9; }
     button.danger { background: #e74c3c; }
     button.danger:hover { background: #c0392b; }
+    button.success { background: #27ae60; }
+    button.secondary { background: #95a5a6; }
     button:disabled { background: #bdc3c7; cursor: not-allowed; }
+
+    /* Messages */
     .message { padding: 12px; border-radius: 4px; margin: 15px 0; font-size: 14px; }
     .message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .message.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .message.error   { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .message.info    { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+
+    /* Header connecté */
     .user-info { background: #ecf0f1; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #ecf0f1; font-size: 14px; }
-    th { background: #f8f9fa; color: #2c3e50; font-weight: 600; }
-    tr:hover { background: #f8f9fa; }
-    .actions button { margin-right: 5px; padding: 6px 12px; font-size: 12px; }
-    .tabs { display: flex; gap: 0; border-bottom: 2px solid #ecf0f1; margin: 20px 0; }
+    .user-info-left { display: flex; align-items: center; gap: 8px; }
+    .notif-bell { position: relative; cursor: pointer; font-size: 24px; margin-right: 15px; }
+    .notif-badge { position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; font-weight: bold; min-width: 18px; text-align: center; }
+
+    /* Notifications panel */
+    .notif-panel { position: absolute; top: 60px; right: 30px; width: 380px; background: white; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; max-height: 400px; overflow-y: auto; display: none; }
+    .notif-panel.open { display: block; }
+    .notif-item { padding: 12px 15px; border-bottom: 1px solid #ecf0f1; cursor: pointer; }
+    .notif-item:hover { background: #f8f9fa; }
+    .notif-item.unread { background: #ebf5fb; border-left: 3px solid #3498db; }
+    .notif-item-title { font-weight: 600; font-size: 13px; color: #2c3e50; }
+    .notif-item-message { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
+    .notif-item-time { font-size: 11px; color: #95a5a6; margin-top: 4px; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid #ecf0f1; margin: 20px 0; flex-wrap: wrap; }
     .tab { padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: #7f8c8d; }
     .tab.active { color: #3498db; border-bottom-color: #3498db; font-weight: 600; }
+
+    /* Tableaux */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #ecf0f1; font-size: 13px; }
+    th { background: #f8f9fa; color: #2c3e50; font-weight: 600; }
+    tr:hover { background: #f8f9fa; }
+    .actions button { margin-right: 5px; padding: 5px 10px; font-size: 12px; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; padding: 25px; border-radius: 6px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+    .modal h3 { margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
     .hidden { display: none; }
-    .upload-zone { border: 2px dashed #bdc3c7; border-radius: 4px; padding: 20px; text-align: center; margin: 15px 0; }
+    .empty-state { text-align: center; color: #95a5a6; padding: 30px; }
+    .status-en_attente { color: #f39c12; font-weight: 600; }
+    .status-fait { color: #27ae60; font-weight: 600; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>🔐 Plateforme Sécurisée FSAIP</h1>
-    <p class="subtitle">POC — Démonstration du transfert sécurisé de documents avec RBAC, chiffrement AES-256 et audit immuable</p>
+    <p class="subtitle">POC — Module de demandes de documents avec RBAC, chiffrement AES-256-GCM et audit immuable</p>
 
     <!-- Section Connexion -->
-    <div id="loginSection" class="login-section">
+    <div id="loginSection">
       <h2 style="margin-bottom: 15px;">Connexion</h2>
       <label for="userSelect">Sélectionner un utilisateur de test :</label>
       <select id="userSelect">
         <option value="">— Choisir —</option>
-        <option value="admin@fsaip.fr|admin">Admin Demo (admin)</option>
-        <option value="prof@fsaip.fr|prof">Pierre Martin (prof)</option>
-        <option value="eleve@fsaip.fr|scolaire">Marie Dupont (scolaire)</option>
-        <option value="invite@fsaip.fr|invite">Jean Visiteur (invite)</option>
+        <optgroup label="Admin plateforme">
+          <option value="admin@fsaip.fr|admin">Admin Demo</option>
+        </optgroup>
+        <optgroup label="Administration — Scolarité">
+          <option value="marie.scolarite@fsaip.fr|administration">Marie Dupont</option>
+          <option value="anne.scolarite@fsaip.fr|administration">Anne Martin</option>
+        </optgroup>
+        <optgroup label="Administration — Comptabilité">
+          <option value="paul.compta@fsaip.fr|administration">Paul Bernard</option>
+          <option value="sophie.compta@fsaip.fr|administration">Sophie Petit</option>
+        </optgroup>
+        <optgroup label="Destinataires">
+          <option value="josue.etudiant@fsaip.fr|etudiant_interne">Josué Locossa (étudiant)</option>
+          <option value="professeur@fsaip.fr|prof">Sophie Durand (prof)</option>
+          <option value="externe@fsaip.fr|externe">Lucas Bernard (externe)</option>
+        </optgroup>
       </select>
       <button onclick="login()">Se connecter</button>
       <div id="loginMessage"></div>
     </div>
 
     <!-- Section Dashboard -->
-    <div id="dashboard" class="dashboard hidden">
+    <div id="dashboard" class="hidden">
       <div class="user-info">
-        <div>
-          Connecté : <strong id="currentUser"></strong>
+        <div class="user-info-left">
+          <span id="currentUserName"></span>
           <span id="currentRole" class="badge"></span>
+          <span id="currentService" class="badge badge-service hidden"></span>
         </div>
-        <button class="danger" onclick="logout()">Déconnexion</button>
-      </div>
-
-      <div class="tabs">
-        <div class="tab active" onclick="showTab('documents')">📄 Documents</div>
-        <div class="tab" id="auditTab" onclick="showTab('audit')">📋 Audit Log</div>
-      </div>
-
-      <!-- Onglet Documents -->
-      <div id="documentsTab">
-        <div id="uploadZone" class="upload-zone hidden">
-          <h3>Uploader un document</h3>
-          <input type="file" id="fileInput">
-          <button onclick="uploadFile()">📤 Uploader</button>
+        <div style="display: flex; align-items: center;">
+          <div class="notif-bell" onclick="toggleNotifs()">
+            🔔
+            <span id="notifBadge" class="notif-badge hidden">0</span>
+          </div>
+          <button class="danger" onclick="logout()">Déconnexion</button>
         </div>
-        <div id="documentsMessage"></div>
-        <h3 style="margin-top: 20px;">Documents disponibles</h3>
-        <button onclick="loadDocuments()" style="margin: 10px 0;">🔄 Rafraîchir</button>
-        <table>
-          <thead>
-            <tr><th>ID</th><th>Nom</th><th>Type</th><th>Date</th><th>Actions</th></tr>
-          </thead>
-          <tbody id="documentsList">
-            <tr><td colspan="5" style="text-align: center; color: #95a5a6;">Aucun document</td></tr>
-          </tbody>
-        </table>
       </div>
 
-      <!-- Onglet Audit -->
-      <div id="auditPanel" class="hidden">
-        <h3>Journal d'audit (immuable)</h3>
-        <p style="color: #7f8c8d; font-size: 13px; margin-bottom: 15px;">⚠️ Ce log ne peut être ni modifié ni supprimé, même par un administrateur (rules SQL).</p>
-        <button onclick="loadAuditLog()">🔄 Rafraîchir</button>
-        <table>
-          <thead>
-            <tr><th>ID</th><th>Utilisateur</th><th>Action</th><th>Ressource</th><th>Date</th></tr>
-          </thead>
-          <tbody id="auditList">
-            <tr><td colspan="5" style="text-align: center; color: #95a5a6;">Cliquer sur Rafraîchir</td></tr>
-          </tbody>
-        </table>
+      <div id="notifPanel" class="notif-panel">
+        <div style="padding: 10px; background: #f8f9fa; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between;">
+          <strong>Notifications</strong>
+          <button style="padding: 3px 8px; font-size: 11px;" onclick="markAllRead()">Tout marquer lu</button>
+        </div>
+        <div id="notifList"></div>
+      </div>
+
+      <!-- Tabs dynamiques selon rôle -->
+      <div class="tabs" id="tabs"></div>
+
+      <div id="messages"></div>
+
+      <!-- Panels (un par tab) -->
+      <div id="panelDemandes" class="panel hidden"></div>
+      <div id="panelDocuments" class="panel hidden"></div>
+      <div id="panelAudit" class="panel hidden"></div>
+      <div id="panelPurge" class="panel hidden"></div>
+    </div>
+  </div>
+
+  <!-- Modal créer demande -->
+  <div id="modalCreerDemande" class="modal-overlay">
+    <div class="modal">
+      <h3>📨 Nouvelle demande</h3>
+      <label>Destinataire :</label>
+      <select id="dmd_destinataire"></select>
+
+      <label>Type de demande :</label>
+      <select id="dmd_type">
+        <option value="upload_simple">Upload simple (le destinataire fournit un doc)</option>
+        <option value="remplir_document">Remplir un document (vous fournissez un modèle à remplir)</option>
+      </select>
+
+      <div id="dmd_modele_zone" class="hidden">
+        <label>Document modèle à remplir :</label>
+        <select id="dmd_modele">
+          <option value="">— Choisir un de vos documents modèles —</option>
+        </select>
+        <p style="font-size: 12px; color: #7f8c8d; margin-top: -10px;">
+          Pour fournir un nouveau modèle, uploadez-le d'abord via l'onglet "Mes documents modèles".
+        </p>
+      </div>
+
+      <label>Titre :</label>
+      <input type="text" id="dmd_titre" placeholder="Ex: Pièce d'identité">
+
+      <label>Description :</label>
+      <textarea id="dmd_description" placeholder="Détails de la demande..."></textarea>
+
+      <p style="font-size: 12px; color: #7f8c8d;">⏰ Date limite automatique : +14 jours.</p>
+
+      <div class="modal-actions">
+        <button class="secondary" onclick="closeModal('modalCreerDemande')">Annuler</button>
+        <button class="success" onclick="creerDemande()">Créer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal upload modèle -->
+  <div id="modalUploadModele" class="modal-overlay">
+    <div class="modal">
+      <h3>📤 Uploader un document modèle</h3>
+      <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">
+        Ce document servira de modèle à remplir pour un destinataire.
+      </p>
+      <input type="file" id="modele_file">
+      <div class="modal-actions">
+        <button class="secondary" onclick="closeModal('modalUploadModele')">Annuler</button>
+        <button class="success" onclick="uploadModele()">Uploader</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal upload réponse -->
+  <div id="modalUploadReponse" class="modal-overlay">
+    <div class="modal">
+      <h3>📤 Déposer un document en réponse</h3>
+      <p id="rep_titre_demande" style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;"></p>
+      <input type="file" id="rep_file">
+      <div class="modal-actions">
+        <button class="secondary" onclick="closeModal('modalUploadReponse')">Annuler</button>
+        <button class="success" onclick="uploadReponse()">Déposer</button>
       </div>
     </div>
   </div>
@@ -113,8 +215,12 @@
   <script>
     const API = 'http://localhost:3000/api';
     let token = null;
-    let currentRole = null;
+    let currentUser = null;
+    let currentDemandeId = null;
 
+    // ════════════════════════════════════════
+    // AUTH
+    // ════════════════════════════════════════
     async function login() {
       const select = document.getElementById('userSelect');
       if (!select.value) {
@@ -130,22 +236,30 @@
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Erreur de connexion');
+
         token = data.token;
-        currentRole = role;
-        document.getElementById('currentUser').textContent = email;
+        currentUser = data.user;
+
+        document.getElementById('currentUserName').textContent =
+          `${currentUser.prenom} ${currentUser.nom}`;
         const badge = document.getElementById('currentRole');
-        badge.textContent = role;
-        badge.className = `badge badge-${role}`;
+        badge.textContent = currentUser.role;
+        badge.className = `badge badge-${currentUser.role}`;
+
+        const serviceBadge = document.getElementById('currentService');
+        if (currentUser.service) {
+          serviceBadge.textContent = '🏢 ' + currentUser.service;
+          serviceBadge.classList.remove('hidden');
+        } else {
+          serviceBadge.classList.add('hidden');
+        }
+
         document.getElementById('loginSection').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
-        // Affichage selon rôle
-        if (role === 'admin' || role === 'prof') {
-          document.getElementById('uploadZone').classList.remove('hidden');
-        }
-        if (role !== 'admin') {
-          document.getElementById('auditTab').style.display = 'none';
-        }
-        loadDocuments();
+
+        buildTabs();
+        loadNotifications();
+        setInterval(loadNotifications, 30000); // refresh notifs toutes les 30s
       } catch (err) {
         showMessage('loginMessage', err.message, 'error');
       }
@@ -153,50 +267,251 @@
 
     function logout() {
       token = null;
-      currentRole = null;
+      currentUser = null;
       document.getElementById('userSelect').value = '';
       document.getElementById('loginSection').classList.remove('hidden');
       document.getElementById('dashboard').classList.add('hidden');
       document.getElementById('loginMessage').innerHTML = '';
     }
 
-    async function loadDocuments() {
+    // ════════════════════════════════════════
+    // TABS (selon rôle)
+    // ════════════════════════════════════════
+    function buildTabs() {
+      const tabsEl = document.getElementById('tabs');
+      const role = currentUser.role;
+      let tabs = [];
+
+      if (role === 'admin') {
+        tabs = [
+          { id: 'demandes',  label: '📨 Toutes les demandes' },
+          { id: 'documents', label: '📄 Tous les documents' },
+          { id: 'audit',     label: '📋 Audit Log' },
+          { id: 'purge',     label: '🧹 Purge' },
+        ];
+      } else if (role === 'administration') {
+        tabs = [
+          { id: 'demandes',  label: '📨 Demandes du service' },
+          { id: 'documents', label: '📄 Documents' },
+        ];
+      } else {
+        // etudiant_interne / prof / externe
+        tabs = [
+          { id: 'demandes',  label: '📥 Mes demandes reçues' },
+          { id: 'documents', label: '📄 Mes documents' },
+        ];
+      }
+
+      tabsEl.innerHTML = tabs.map((t, i) =>
+        `<div class="tab ${i === 0 ? 'active' : ''}" data-tab="${t.id}" onclick="showTab('${t.id}', event)">${t.label}</div>`
+      ).join('');
+
+      showTab(tabs[0].id);
+    }
+
+    function showTab(tabId, event) {
+      // Désactiver tous les tabs
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if (event && event.target) event.target.classList.add('active');
+      else document.querySelector(`[data-tab="${tabId}"]`)?.classList.add('active');
+
+      // Cacher tous les panels
+      ['demandes', 'documents', 'audit', 'purge'].forEach(id => {
+        document.getElementById('panel' + id.charAt(0).toUpperCase() + id.slice(1))?.classList.add('hidden');
+      });
+
+      // Afficher et remplir le panel actif
+      const panel = document.getElementById('panel' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
+      if (panel) panel.classList.remove('hidden');
+
+      if (tabId === 'demandes')  renderDemandes();
+      if (tabId === 'documents') renderDocuments();
+      if (tabId === 'audit')     renderAudit();
+      if (tabId === 'purge')     renderPurge();
+    }
+
+    // ════════════════════════════════════════
+    // PANEL DEMANDES
+    // ════════════════════════════════════════
+    async function renderDemandes() {
+      const panel = document.getElementById('panelDemandes');
+      const isAdministration = currentUser.role === 'administration';
+
+      let html = '<h3>📨 Demandes</h3>';
+      if (isAdministration) {
+        html += '<button class="success" style="margin: 10px 0;" onclick="openCreerDemande()">+ Nouvelle demande</button>';
+      }
+      html += '<button class="secondary" style="margin: 10px 0 10px 10px;" onclick="renderDemandes()">🔄 Rafraîchir</button>';
+      html += '<div id="demandesContent"></div>';
+      panel.innerHTML = html;
+
       try {
-        const res = await fetch(`${API}/documents`, {
+        const res = await fetch(`${API}/requests`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Erreur de chargement');
-        const tbody = document.getElementById('documentsList');
-        if (!data.documents || data.documents.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #95a5a6;">Aucun document</td></tr>';
+        if (!res.ok) throw new Error(data.error);
+
+        const content = document.getElementById('demandesContent');
+        if (!data.demandes.length) {
+          content.innerHTML = '<div class="empty-state">Aucune demande</div>';
           return;
         }
-        tbody.innerHTML = data.documents.map(doc => `
-          <tr>
-            <td>${doc.id}</td>
-            <td>${doc.nom_fichier}</td>
-            <td>${doc.type || '-'}</td>
-            <td>${new Date(doc.cree_le).toLocaleString('fr-FR')}</td>
-            <td class="actions">
-              <button onclick="downloadFile(${doc.id}, '${doc.nom_fichier}')">⬇️ Télécharger</button>
-              ${currentRole === 'admin' ? `<button class="danger" onclick="deleteFile(${doc.id})">🗑️ Supprimer</button>` : ''}
-            </td>
-          </tr>
-        `).join('');
+
+        content.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Titre</th>
+                <th>Type</th>
+                <th>Émetteur</th>
+                <th>Destinataire</th>
+                <th>Statut</th>
+                <th>Date limite</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.demandes.map(d => renderDemandeRow(d)).join('')}
+            </tbody>
+          </table>
+        `;
       } catch (err) {
-        showMessage('documentsMessage', err.message, 'error');
+        showMessage('messages', err.message, 'error');
       }
     }
 
-    async function uploadFile() {
-      const input = document.getElementById('fileInput');
-      if (!input.files[0]) {
-        showMessage('documentsMessage', 'Sélectionnez un fichier', 'error');
+    function renderDemandeRow(d) {
+      const role = currentUser.role;
+      let actions = '';
+
+      // Destinataire : peut déposer un doc en réponse (si en_attente)
+      if (d.destinataire_id === currentUser.id && d.statut === 'en_attente') {
+        actions += `<button class="success" onclick="openUploadReponse(${d.id}, '${escapeJs(d.titre)}')">📤 Déposer</button>`;
+      }
+      // Administration de mon service ou admin : modifier/supprimer
+      if (role === 'admin' || (role === 'administration' && d.service_id === currentUser.service_id)) {
+        actions += `<button class="danger" onclick="supprimerDemande(${d.id})">🗑️</button>`;
+      }
+      // Si un modèle existe : on peut le télécharger
+      if (d.type_demande === 'remplir_document' && d.document_modele_id) {
+        actions += `<button onclick="downloadDoc(${d.document_modele_id})">📥 Modèle</button>`;
+      }
+
+      return `
+        <tr>
+          <td><strong>${escapeHtml(d.titre)}</strong><br><small>${escapeHtml(d.description || '')}</small></td>
+          <td>${d.type_demande === 'remplir_document' ? '📝 Remplir' : '📤 Upload'}</td>
+          <td>${escapeHtml(d.emetteur_nom)}<br><small>${escapeHtml(d.service_nom || '')}</small></td>
+          <td>${escapeHtml(d.destinataire_nom)}<br><small>${d.destinataire_role}</small></td>
+          <td class="status-${d.statut}">${d.statut === 'fait' ? '✅ Fait' : '⏳ En attente'}</td>
+          <td>${new Date(d.date_limite).toLocaleDateString('fr-FR')}</td>
+          <td class="actions">${actions}</td>
+        </tr>
+      `;
+    }
+
+    function openCreerDemande() {
+      // Charger les destinataires
+      fetch(`${API}/users`, { headers: { 'Authorization': `Bearer ${token}` } })
+        .then(r => r.json())
+        .then(data => {
+          const sel = document.getElementById('dmd_destinataire');
+          sel.innerHTML = '<option value="">— Choisir —</option>' +
+            data.utilisateurs.map(u =>
+              `<option value="${u.id}">${escapeHtml(u.prenom)} ${escapeHtml(u.nom)} (${u.role})</option>`
+            ).join('');
+        });
+
+      // Charger mes documents (pour les modèles éventuels)
+      fetch(`${API}/documents`, { headers: { 'Authorization': `Bearer ${token}` } })
+        .then(r => r.json())
+        .then(data => {
+          const sel = document.getElementById('dmd_modele');
+          const mesModeles = data.documents.filter(d => d.uploader_id === currentUser.id);
+          sel.innerHTML = '<option value="">— Choisir un modèle —</option>' +
+            mesModeles.map(d => `<option value="${d.id}">${escapeHtml(d.nom_fichier)}</option>`).join('');
+        });
+
+      // Afficher/cacher zone modèle selon le type
+      document.getElementById('dmd_type').onchange = function() {
+        const zone = document.getElementById('dmd_modele_zone');
+        if (this.value === 'remplir_document') zone.classList.remove('hidden');
+        else zone.classList.add('hidden');
+      };
+
+      // Reset
+      document.getElementById('dmd_titre').value = '';
+      document.getElementById('dmd_description').value = '';
+      document.getElementById('dmd_type').value = 'upload_simple';
+      document.getElementById('dmd_modele_zone').classList.add('hidden');
+
+      openModal('modalCreerDemande');
+    }
+
+    async function creerDemande() {
+      const destinataire_id = document.getElementById('dmd_destinataire').value;
+      const type_demande    = document.getElementById('dmd_type').value;
+      const titre           = document.getElementById('dmd_titre').value;
+      const description     = document.getElementById('dmd_description').value;
+      const document_modele_id = document.getElementById('dmd_modele').value || null;
+
+      if (!destinataire_id || !titre) {
+        alert('Destinataire et titre sont requis');
         return;
       }
+
+      try {
+        const res = await fetch(`${API}/requests`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ destinataire_id: parseInt(destinataire_id), type_demande, titre, description, document_modele_id: document_modele_id ? parseInt(document_modele_id) : null })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        closeModal('modalCreerDemande');
+        showMessage('messages', '✅ Demande créée et email envoyé au destinataire', 'success');
+        renderDemandes();
+      } catch (err) {
+        alert('Erreur : ' + err.message);
+      }
+    }
+
+    async function supprimerDemande(id) {
+      if (!confirm('Supprimer cette demande ? Les documents en réponse seront aussi supprimés.')) return;
+      try {
+        const res = await fetch(`${API}/requests/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        showMessage('messages', '✅ Demande supprimée', 'success');
+        renderDemandes();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    // ════════════════════════════════════════
+    // UPLOAD réponse à une demande
+    // ════════════════════════════════════════
+    function openUploadReponse(demandeId, titre) {
+      currentDemandeId = demandeId;
+      document.getElementById('rep_titre_demande').textContent = `Demande : ${titre}`;
+      document.getElementById('rep_file').value = '';
+      openModal('modalUploadReponse');
+    }
+
+    async function uploadReponse() {
+      const file = document.getElementById('rep_file').files[0];
+      if (!file) { alert('Sélectionnez un fichier'); return; }
+
       const formData = new FormData();
-      formData.append('fichier', input.files[0]);
+      formData.append('fichier', file);
+      formData.append('demande_id', currentDemandeId);
+
       try {
         const res = await fetch(`${API}/documents/upload`, {
           method: 'POST',
@@ -204,37 +519,125 @@
           body: formData
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Erreur upload');
-        showMessage('documentsMessage', `✅ ${data.message}`, 'success');
-        input.value = '';
-        loadDocuments();
+        if (!res.ok) throw new Error(data.error);
+
+        closeModal('modalUploadReponse');
+        showMessage('messages', '✅ ' + data.message, 'success');
+        renderDemandes();
       } catch (err) {
-        showMessage('documentsMessage', err.message, 'error');
+        alert('Erreur : ' + err.message);
       }
     }
 
-    async function downloadFile(id, filename) {
+    // ════════════════════════════════════════
+    // PANEL DOCUMENTS
+    // ════════════════════════════════════════
+    async function renderDocuments() {
+      const panel = document.getElementById('panelDocuments');
+      const isAdministration = currentUser.role === 'administration';
+
+      let html = '<h3>📄 Documents</h3>';
+      if (isAdministration) {
+        html += '<button class="success" style="margin: 10px 0;" onclick="openModal(\'modalUploadModele\')">+ Uploader un modèle</button>';
+      }
+      html += '<button class="secondary" style="margin: 10px 0 10px 10px;" onclick="renderDocuments()">🔄 Rafraîchir</button>';
+      html += '<div id="documentsContent"></div>';
+      panel.innerHTML = html;
+
+      try {
+        const res = await fetch(`${API}/documents`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        const content = document.getElementById('documentsContent');
+        if (!data.documents.length) {
+          content.innerHTML = '<div class="empty-state">Aucun document</div>';
+          return;
+        }
+
+        content.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Contexte</th>
+                <th>Demande</th>
+                <th>Uploadé par</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.documents.map(d => `
+                <tr>
+                  <td>${escapeHtml(d.nom_fichier)}</td>
+                  <td>${d.contexte === 'modele' ? '📝 Modèle' : (d.contexte === 'reponse' ? '📥 Réponse' : '—')}</td>
+                  <td>${d.demande_titre ? escapeHtml(d.demande_titre) : '—'}</td>
+                  <td>${escapeHtml(d.uploader_nom || '')}</td>
+                  <td>${new Date(d.cree_le).toLocaleString('fr-FR')}</td>
+                  <td class="actions">
+                    ${currentUser.role !== 'admin' ? `<button onclick="downloadDoc(${d.id})">⬇️</button>` : ''}
+                    ${currentUser.role === 'admin' ? `<button class="danger" onclick="supprimerDoc(${d.id})">🗑️</button>` : ''}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        showMessage('messages', err.message, 'error');
+      }
+    }
+
+    async function uploadModele() {
+      const file = document.getElementById('modele_file').files[0];
+      if (!file) { alert('Sélectionnez un fichier'); return; }
+
+      const formData = new FormData();
+      formData.append('fichier', file);
+      formData.append('is_modele', 'true');
+
+      try {
+        const res = await fetch(`${API}/documents/upload`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        closeModal('modalUploadModele');
+        showMessage('messages', '✅ Modèle uploadé', 'success');
+        renderDocuments();
+      } catch (err) {
+        alert('Erreur : ' + err.message);
+      }
+    }
+
+    async function downloadDoc(id) {
       try {
         const res = await fetch(`${API}/documents/${id}/download`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) {
           const data = await res.json();
-          throw new Error(data.error || 'Erreur téléchargement');
+          throw new Error(data.error);
         }
+        const cd = res.headers.get('Content-Disposition') || '';
+        const filename = cd.match(/filename="(.+)"/)?.[1] || 'document';
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
+        a.href = url; a.download = filename; a.click();
         URL.revokeObjectURL(url);
       } catch (err) {
-        showMessage('documentsMessage', err.message, 'error');
+        alert('Erreur : ' + err.message);
       }
     }
 
-    async function deleteFile(id) {
+    async function supprimerDoc(id) {
       if (!confirm('Supprimer ce document ?')) return;
       try {
         const res = await fetch(`${API}/documents/${id}`, {
@@ -242,57 +645,168 @@
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Erreur suppression');
-        showMessage('documentsMessage', `✅ ${data.message}`, 'success');
-        loadDocuments();
+        if (!res.ok) throw new Error(data.error);
+        showMessage('messages', '✅ Document supprimé', 'success');
+        renderDocuments();
       } catch (err) {
-        showMessage('documentsMessage', err.message, 'error');
+        alert(err.message);
       }
     }
 
-    async function loadAuditLog() {
+    // ════════════════════════════════════════
+    // PANEL AUDIT
+    // ════════════════════════════════════════
+    async function renderAudit() {
+      const panel = document.getElementById('panelAudit');
+      panel.innerHTML = '<h3>📋 Audit Log (immuable, hash chaîné)</h3><button class="secondary" onclick="renderAudit()">🔄 Rafraîchir</button><div id="auditContent"></div>';
+
       try {
         const res = await fetch(`${API}/audit`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Erreur chargement');
-        const tbody = document.getElementById('auditList');
-        if (!data.logs || data.logs.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #95a5a6;">Aucune entrée</td></tr>';
+        if (!res.ok) throw new Error(data.error);
+
+        document.getElementById('auditContent').innerHTML = `
+          <table>
+            <thead><tr><th>ID</th><th>Utilisateur</th><th>Action</th><th>Ressource</th><th>Date</th></tr></thead>
+            <tbody>
+              ${data.logs.map(l => `
+                <tr>
+                  <td>${l.id}</td>
+                  <td>${escapeHtml(l.email || '?')}</td>
+                  <td>${escapeHtml(l.action)}</td>
+                  <td>${escapeHtml(l.type_ressource || '-')}</td>
+                  <td>${new Date(l.cree_le).toLocaleString('fr-FR')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        document.getElementById('auditContent').innerHTML = `<div class="message error">${err.message}</div>`;
+      }
+    }
+
+    // ════════════════════════════════════════
+    // PANEL PURGE
+    // ════════════════════════════════════════
+    function renderPurge() {
+      const panel = document.getElementById('panelPurge');
+      panel.innerHTML = `
+        <h3>🧹 Purge des demandes expirées</h3>
+        <p style="margin: 15px 0; color: #7f8c8d;">
+          Lance la purge des demandes dont la date limite est dépassée.
+          La cascade supprime les documents en réponse (BDD + fichiers chiffrés sur le NAS) et les notifications associées.
+        </p>
+        <button class="danger" onclick="lancerPurge()">🧹 Lancer la purge manuelle</button>
+        <div id="purgeResult"></div>
+      `;
+    }
+
+    async function lancerPurge() {
+      try {
+        const res = await fetch(`${API}/admin/purge`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        document.getElementById('purgeResult').innerHTML = `
+          <div class="message success">
+            ✅ ${data.message}<br>
+            Demandes supprimées : <strong>${data.demandes_supprimees}</strong><br>
+            Documents supprimés : <strong>${data.documents_supprimes}</strong>
+          </div>
+        `;
+      } catch (err) {
+        document.getElementById('purgeResult').innerHTML = `<div class="message error">${err.message}</div>`;
+      }
+    }
+
+    // ════════════════════════════════════════
+    // NOTIFICATIONS
+    // ════════════════════════════════════════
+    async function loadNotifications() {
+      if (!token) return;
+      try {
+        const res = await fetch(`${API}/notifications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!res.ok) return;
+
+        const badge = document.getElementById('notifBadge');
+        if (data.non_lues > 0) {
+          badge.textContent = data.non_lues;
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+        }
+
+        const list = document.getElementById('notifList');
+        if (!data.notifications.length) {
+          list.innerHTML = '<div class="empty-state">Aucune notification</div>';
           return;
         }
-        tbody.innerHTML = data.logs.map(log => `
-          <tr>
-            <td>${log.id}</td>
-            <td>${log.email || '?'}</td>
-            <td>${log.action}</td>
-            <td>${log.type_ressource || '-'}</td>
-            <td>${new Date(log.cree_le).toLocaleString('fr-FR')}</td>
-          </tr>
+        list.innerHTML = data.notifications.map(n => `
+          <div class="notif-item ${n.lue ? '' : 'unread'}" onclick="markRead(${n.id})">
+            <div class="notif-item-title">${escapeHtml(n.titre)}</div>
+            ${n.message ? `<div class="notif-item-message">${escapeHtml(n.message)}</div>` : ''}
+            <div class="notif-item-time">${new Date(n.cree_le).toLocaleString('fr-FR')}</div>
+          </div>
         `).join('');
       } catch (err) {
-        document.getElementById('auditList').innerHTML = `<tr><td colspan="5" style="color: red;">${err.message}</td></tr>`;
+        console.error(err);
       }
     }
 
-    function showTab(tab) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      if (tab === 'documents') {
-        document.getElementById('documentsTab').classList.remove('hidden');
-        document.getElementById('auditPanel').classList.add('hidden');
-      } else {
-        document.getElementById('documentsTab').classList.add('hidden');
-        document.getElementById('auditPanel').classList.remove('hidden');
-        loadAuditLog();
-      }
+    function toggleNotifs() {
+      document.getElementById('notifPanel').classList.toggle('open');
     }
 
-    function showMessage(id, msg, type) {
-      const el = document.getElementById(id);
+    async function markRead(id) {
+      try {
+        await fetch(`${API}/notifications/${id}/read`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        loadNotifications();
+      } catch (err) { console.error(err); }
+    }
+
+    async function markAllRead() {
+      try {
+        await fetch(`${API}/notifications/read-all`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        loadNotifications();
+      } catch (err) { console.error(err); }
+    }
+
+    // ════════════════════════════════════════
+    // UTILS
+    // ════════════════════════════════════════
+    function openModal(id)  { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    function showMessage(elId, msg, type) {
+      const el = document.getElementById(elId);
       el.innerHTML = `<div class="message ${type}">${msg}</div>`;
       setTimeout(() => el.innerHTML = '', 5000);
+    }
+
+    function escapeHtml(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+    function escapeJs(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/['\\]/g, c => '\\' + c);
     }
   </script>
 </body>
