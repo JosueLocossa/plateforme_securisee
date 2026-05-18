@@ -61,6 +61,11 @@ app.use(express.static(path.join(__dirname, '../../frontend')));
 app.use('/api/auth',      authLimiter, require('./api/auth'));
 app.use('/api/documents', require('./api/documents'));
 app.use('/api/audit',     require('./api/audit'));
+app.use('/api/services',      require('./api/services'));
+app.use('/api/users',         require('./api/users'));
+app.use('/api/requests',      require('./api/requests'));
+app.use('/api/notifications', require('./api/notifications'));
+app.use('/api/admin',         require('./api/admin'));
 
 // Health check (public)
 app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
