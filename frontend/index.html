@@ -84,30 +84,74 @@
     <!-- Section Connexion -->
     <div id="loginSection">
       <h2 style="margin-bottom: 15px;">Connexion</h2>
-      <label for="userSelect">Sélectionner un utilisateur de test :</label>
-      <select id="userSelect">
-        <option value="">— Choisir —</option>
-        <optgroup label="Admin plateforme">
-          <option value="admin@fsaip.fr|admin">Admin Demo</option>
-        </optgroup>
-        <optgroup label="Administration — Scolarité">
-          <option value="marie.scolarite@fsaip.fr|administration">Marie Dupont</option>
-          <option value="anne.scolarite@fsaip.fr|administration">Anne Martin</option>
-        </optgroup>
-        <optgroup label="Administration — Comptabilité">
-          <option value="paul.compta@fsaip.fr|administration">Paul Bernard</option>
-          <option value="sophie.compta@fsaip.fr|administration">Sophie Petit</option>
-        </optgroup>
-        <optgroup label="Destinataires">
-          <option value="josue.etudiant@fsaip.fr|etudiant_interne">Josué Locossa (étudiant)</option>
-          <option value="professeur@fsaip.fr|prof">Sophie Durand (prof)</option>
-          <option value="externe@fsaip.fr|externe">Lucas Bernard (externe)</option>
-        </optgroup>
-      </select>
+
+      <label for="loginEmail">Adresse email :</label>
+      <input type="email" id="loginEmail" placeholder="nom.prenom@fsaip.fr" autocomplete="username">
+
+      <label for="loginPassword">Mot de passe :</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+
       <button onclick="login()">Se connecter</button>
       <div id="loginMessage"></div>
-    </div>
 
+      <details style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 4px;">
+        <summary style="cursor: pointer; font-weight: 600; color: #2c3e50;">
+          🧪 Comptes de test (cliquer pour afficher)
+        </summary>
+        <div style="margin-top: 15px; font-size: 13px;">
+          <p style="color: #7f8c8d; margin-bottom: 10px;">
+            Cliquez sur une ligne pour remplir automatiquement le formulaire.
+          </p>
+          <table style="width: 100%;">
+            <thead>
+              <tr><th>Rôle</th><th>Email</th><th>Mot de passe</th></tr>
+            </thead>
+            <tbody>
+              <tr onclick="fillLogin('admin@fsaip.fr','admin123')" style="cursor: pointer;">
+                <td><span class="badge badge-admin">admin</span></td>
+                <td>admin@fsaip.fr</td>
+                <td>admin123</td>
+              </tr>
+              <tr onclick="fillLogin('marie.scolarite@fsaip.fr','marie123')" style="cursor: pointer;">
+                <td><span class="badge badge-administration">administration</span> Scolarité</td>
+                <td>marie.scolarite@fsaip.fr</td>
+                <td>marie123</td>
+              </tr>
+              <tr onclick="fillLogin('anne.scolarite@fsaip.fr','anne123')" style="cursor: pointer;">
+                <td><span class="badge badge-administration">administration</span> Scolarité</td>
+                <td>anne.scolarite@fsaip.fr</td>
+                <td>anne123</td>
+              </tr>
+              <tr onclick="fillLogin('paul.compta@fsaip.fr','paul123')" style="cursor: pointer;">
+                <td><span class="badge badge-administration">administration</span> Compta</td>
+                <td>paul.compta@fsaip.fr</td>
+                <td>paul123</td>
+              </tr>
+              <tr onclick="fillLogin('sophie.compta@fsaip.fr','sophie123')" style="cursor: pointer;">
+                <td><span class="badge badge-administration">administration</span> Compta</td>
+                <td>sophie.compta@fsaip.fr</td>
+                <td>sophie123</td>
+              </tr>
+              <tr onclick="fillLogin('josue.etudiant@fsaip.fr','josue123')" style="cursor: pointer;">
+                <td><span class="badge badge-etudiant_interne">étudiant</span></td>
+                <td>josue.etudiant@fsaip.fr</td>
+                <td>josue123</td>
+              </tr>
+              <tr onclick="fillLogin('professeur@fsaip.fr','prof123')" style="cursor: pointer;">
+                <td><span class="badge badge-prof">prof</span></td>
+                <td>professeur@fsaip.fr</td>
+                <td>prof123</td>
+              </tr>
+              <tr onclick="fillLogin('externe@fsaip.fr','externe123')" style="cursor: pointer;">
+                <td><span class="badge badge-externe">externe</span></td>
+                <td>externe@fsaip.fr</td>
+                <td>externe123</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
     <!-- Section Dashboard -->
     <div id="dashboard" class="hidden">
       <div class="user-info">
@@ -222,17 +266,19 @@
     // AUTH
     // ════════════════════════════════════════
     async function login() {
-      const select = document.getElementById('userSelect');
-      if (!select.value) {
-        showMessage('loginMessage', 'Sélectionnez un utilisateur', 'error');
+      const email    = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        showMessage('loginMessage', 'Email et mot de passe requis', 'error');
         return;
       }
-      const [email, role] = select.value.split('|');
+
       try {
         const res = await fetch(`${API}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, role })
+          body: JSON.stringify({ email, password })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Erreur de connexion');
@@ -259,21 +305,29 @@
 
         buildTabs();
         loadNotifications();
-        setInterval(loadNotifications, 30000); // refresh notifs toutes les 30s
+        setInterval(loadNotifications, 30000);
+
+        // Nettoyer le formulaire de login après usage (sécurité)
+        document.getElementById('loginPassword').value = '';
       } catch (err) {
         showMessage('loginMessage', err.message, 'error');
       }
     }
 
+    function fillLogin(email, password) {
+      document.getElementById('loginEmail').value = email;
+      document.getElementById('loginPassword').value = password;
+    }
+
     function logout() {
       token = null;
       currentUser = null;
-      document.getElementById('userSelect').value = '';
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginPassword').value = '';
       document.getElementById('loginSection').classList.remove('hidden');
       document.getElementById('dashboard').classList.add('hidden');
       document.getElementById('loginMessage').innerHTML = '';
     }
-
     // ════════════════════════════════════════
     // TABS (selon rôle)
     // ════════════════════════════════════════
