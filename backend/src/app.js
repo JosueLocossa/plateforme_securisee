@@ -41,10 +41,9 @@ const generalLimiter = rateLimit({
 // Rate limiting strict sur l'authentification (anti brute-force)
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 5,                         // 5 req/min/IP sur /auth
+  max: 5,
+  skip: (req) => process.env.NODE_ENV === 'test',
   message: { error: 'Trop de tentatives — réessayez dans 1 minute' },
-  standardHeaders: true,
-  legacyHeaders: false,
 });
 
 app.use(generalLimiter);

@@ -5,11 +5,18 @@ package-lock.json
 # Variables d'environnement (secrets)
 .env
 *.env.local
+.env.test
 
 # Stockage et logs
 backend/storage/
+backend/storage-test/
 backend/logs/
 *.log
+
+# Tests / Coverage
+backend/coverage/
+coverage/
+*.test.pdf
 
 # Système
 .DS_Store
@@ -22,8 +29,10 @@ Thumbs.db
 # Fichiers temporaires
 *.tmp
 *.swp
+*.bak
 test_doc.txt
-
-# Fichiers de test temporaires
 faux.pdf
-*.test.pdf
+
+# Docker — fichiers parasites Notepad
+*Dockerfile.txt
+*.dockerignore.txt
