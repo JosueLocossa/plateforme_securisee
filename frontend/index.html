@@ -2,866 +2,1155 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plateforme Sécurisée FSAIP</title>
   <style>
+    :root {
+      --primary-900: #0a2540;
+      --primary-700: #1e3a5f;
+      --primary-500: #2e5a8e;
+      --primary-300: #5b8bc0;
+      --primary-100: #e6eef7;
+      --accent: #d4af37;
+      --success: #10b981;
+      --success-bg: #d1fae5;
+      --warning: #f59e0b;
+      --warning-bg: #fef3c7;
+      --danger: #ef4444;
+      --danger-bg: #fee2e2;
+      --info: #3b82f6;
+      --info-bg: #dbeafe;
+      --neutral-900: #1f2937;
+      --neutral-700: #4b5563;
+      --neutral-500: #9ca3af;
+      --neutral-300: #d1d5db;
+      --neutral-200: #e5e7eb;
+      --neutral-100: #f3f4f6;
+      --neutral-50: #f9fafb;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      --transition: all 0.2s ease;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f8; color: #333; padding: 20px; }
-    .container { max-width: 1100px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 30px; }
-    h1, h2, h3 { color: #2c3e50; }
-    .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 14px; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-left: 8px; }
-    .badge-admin            { background: #e74c3c; color: white; }
-    .badge-administration   { background: #3498db; color: white; }
-    .badge-etudiant_interne { background: #2ecc71; color: white; }
-    .badge-prof             { background: #9b59b6; color: white; }
-    .badge-externe          { background: #f39c12; color: white; }
-    .badge-service          { background: #34495e; color: white; }
 
-    /* Login */
-    .login-section label { display: block; margin-bottom: 6px; font-weight: 600; color: #34495e; }
-    select, input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px; font-size: 14px; font-family: inherit; }
-    textarea { resize: vertical; min-height: 80px; }
-    button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; }
-    button:hover { background: #2980b9; }
-    button.danger { background: #e74c3c; }
-    button.danger:hover { background: #c0392b; }
-    button.success { background: #27ae60; }
-    button.secondary { background: #95a5a6; }
-    button:disabled { background: #bdc3c7; cursor: not-allowed; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      background: var(--neutral-50);
+      color: var(--neutral-900);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
 
-    /* Messages */
-    .message { padding: 12px; border-radius: 4px; margin: 15px 0; font-size: 14px; }
-    .message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .message.error   { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    .message.info    { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary-900) 0%, var(--primary-500) 100%);
+      padding: var(--space-lg);
+    }
 
-    /* Header connecté */
-    .user-info { background: #ecf0f1; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-    .user-info-left { display: flex; align-items: center; gap: 8px; }
-    .notif-bell { position: relative; cursor: pointer; font-size: 24px; margin-right: 15px; }
-    .notif-badge { position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; font-weight: bold; min-width: 18px; text-align: center; }
+    .login-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-2xl);
+      max-width: 480px;
+      width: 100%;
+    }
 
-    /* Notifications panel */
-    .notif-panel { position: absolute; top: 60px; right: 30px; width: 380px; background: white; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; max-height: 400px; overflow-y: auto; display: none; }
+    .login-logo {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .login-logo svg {
+      width: 56px;
+      height: 56px;
+      margin-bottom: var(--space-sm);
+    }
+
+    .login-logo h1 {
+      font-size: 1.5rem;
+      color: var(--primary-900);
+      font-weight: 700;
+    }
+
+    .login-logo p {
+      color: var(--neutral-500);
+      font-size: 0.875rem;
+      margin-top: var(--space-xs);
+    }
+
+    .form-group { margin-bottom: var(--space-md); }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--neutral-700);
+      margin-bottom: var(--space-xs);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: var(--transition);
+      background: var(--white);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 3px var(--primary-100);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--primary-500); color: white; }
+    .btn-primary:hover { background: var(--primary-700); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #059669; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-secondary { background: var(--neutral-200); color: var(--neutral-900); }
+    .btn-secondary:hover { background: var(--neutral-300); }
+    .btn-ghost { background: transparent; color: var(--primary-500); }
+    .btn-ghost:hover { background: var(--primary-100); }
+    .btn-block { width: 100%; }
+    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .test-accounts {
+      margin-top: var(--space-lg);
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .test-accounts summary {
+      padding: var(--space-sm) var(--space-md);
+      background: var(--neutral-50);
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--neutral-700);
+      font-weight: 600;
+      user-select: none;
+    }
+    .test-accounts summary:hover { background: var(--neutral-100); }
+    .test-accounts-list { padding: var(--space-sm); }
+    .test-account-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.8rem;
+    }
+    .test-account-row:hover { background: var(--primary-100); }
+    .test-account-info { flex: 1; min-width: 0; }
+    .test-account-email { color: var(--neutral-900); font-weight: 500; }
+    .test-account-pwd { color: var(--neutral-500); font-family: monospace; font-size: 0.75rem; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-admin              { background: var(--danger-bg); color: var(--danger); }
+    .badge-administration     { background: var(--info-bg); color: var(--info); }
+    .badge-etudiant_interne   { background: var(--success-bg); color: var(--success); }
+    .badge-prof               { background: #f3e8ff; color: #9333ea; }
+    .badge-externe            { background: var(--warning-bg); color: var(--warning); }
+    .badge-service            { background: var(--primary-100); color: var(--primary-700); }
+
+    .app { min-height: 100vh; display: flex; flex-direction: column; }
+
+    .app-header {
+      background: var(--primary-900);
+      color: white;
+      padding: var(--space-md) var(--space-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .app-header-brand { display: flex; align-items: center; gap: var(--space-sm); font-weight: 700; }
+    .app-header-brand svg { width: 28px; height: 28px; }
+    .app-header-user { display: flex; align-items: center; gap: var(--space-md); }
+    .app-header-user-info { text-align: right; }
+    .app-header-user-name { font-weight: 600; font-size: 0.9rem; }
+    .app-header-user-role { font-size: 0.75rem; color: rgba(255,255,255,0.7); }
+
+    .notif-bell-wrapper { position: relative; }
+    .notif-bell {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      width: 40px; height: 40px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: var(--transition);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .notif-bell:hover { background: rgba(255,255,255,0.2); }
+    .notif-badge {
+      position: absolute;
+      top: -2px; right: -2px;
+      background: var(--danger);
+      color: white;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      min-width: 18px;
+      text-align: center;
+      border: 2px solid var(--primary-900);
+    }
+    .notif-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 380px;
+      max-height: 480px;
+      overflow-y: auto;
+      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      display: none;
+      color: var(--neutral-900);
+    }
     .notif-panel.open { display: block; }
-    .notif-item { padding: 12px 15px; border-bottom: 1px solid #ecf0f1; cursor: pointer; }
-    .notif-item:hover { background: #f8f9fa; }
-    .notif-item.unread { background: #ebf5fb; border-left: 3px solid #3498db; }
-    .notif-item-title { font-weight: 600; font-size: 13px; color: #2c3e50; }
-    .notif-item-message { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
-    .notif-item-time { font-size: 11px; color: #95a5a6; margin-top: 4px; }
+    .notif-panel-header {
+      padding: var(--space-md);
+      background: var(--neutral-50);
+      border-bottom: 1px solid var(--neutral-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .notif-item {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--neutral-100);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .notif-item:hover { background: var(--neutral-50); }
+    .notif-item.unread { background: var(--primary-100); border-left: 3px solid var(--primary-500); }
+    .notif-item-title { font-weight: 600; font-size: 0.85rem; }
+    .notif-item-msg { color: var(--neutral-700); font-size: 0.8rem; margin-top: 2px; }
+    .notif-item-time { color: var(--neutral-500); font-size: 0.7rem; margin-top: 4px; }
 
-    /* Tabs */
-    .tabs { display: flex; gap: 0; border-bottom: 2px solid #ecf0f1; margin: 20px 0; flex-wrap: wrap; }
-    .tab { padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: #7f8c8d; }
-    .tab.active { color: #3498db; border-bottom-color: #3498db; font-weight: 600; }
+    .app-main { flex: 1; padding: var(--space-xl); max-width: 1280px; width: 100%; margin: 0 auto; }
 
-    /* Tableaux */
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #ecf0f1; font-size: 13px; }
-    th { background: #f8f9fa; color: #2c3e50; font-weight: 600; }
-    tr:hover { background: #f8f9fa; }
-    .actions button { margin-right: 5px; padding: 5px 10px; font-size: 12px; }
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--neutral-200);
+      margin-bottom: var(--space-xl);
+      flex-wrap: wrap;
+    }
+    .tab {
+      padding: var(--space-md) var(--space-lg);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      color: var(--neutral-500);
+      font-weight: 500;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+    .tab:hover { color: var(--primary-500); }
+    .tab.active {
+      color: var(--primary-700);
+      border-bottom-color: var(--primary-500);
+      font-weight: 600;
+    }
 
-    /* Modal */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-lg);
+    }
+    .panel-header h2 {
+      font-size: 1.5rem;
+      color: var(--neutral-900);
+    }
+    .panel-actions { display: flex; gap: var(--space-sm); }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.875rem var(--space-md);
+      font-size: 0.875rem;
+      border-bottom: 1px solid var(--neutral-100);
+    }
+    th {
+      background: var(--neutral-50);
+      color: var(--neutral-700);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    tr:last-child td { border-bottom: none; }
+    tbody tr { transition: var(--transition); }
+    tbody tr:hover { background: var(--neutral-50); }
+
+    .actions-cell { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .status-en_attente { background: var(--warning-bg); color: var(--warning); }
+    .status-fait       { background: var(--success-bg); color: var(--success); }
+
+    .empty-state {
+      padding: var(--space-2xl);
+      text-align: center;
+      color: var(--neutral-500);
+    }
+    .empty-state svg { width: 48px; height: 48px; opacity: 0.3; margin-bottom: var(--space-sm); }
+    .empty-state p { font-size: 0.9rem; }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(10, 37, 64, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      animation: fadeIn 0.15s ease;
+    }
     .modal-overlay.open { display: flex; }
-    .modal { background: white; padding: 25px; border-radius: 6px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
-    .modal h3 { margin-bottom: 20px; }
-    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+    .modal {
+      background: white;
+      border-radius: var(--radius-lg);
+      max-width: 540px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.2s ease;
+    }
+    .modal-header {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--neutral-100);
+    }
+    .modal-header h3 {
+      font-size: 1.25rem;
+      color: var(--neutral-900);
+    }
+    .modal-body { padding: var(--space-lg); }
+    .modal-footer {
+      padding: var(--space-lg);
+      border-top: 1px solid var(--neutral-100);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-sm);
+      background: var(--neutral-50);
+    }
 
-    .hidden { display: none; }
-    .empty-state { text-align: center; color: #95a5a6; padding: 30px; }
-    .status-en_attente { color: #f39c12; font-weight: 600; }
-    .status-fait { color: #27ae60; font-weight: 600; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .toast-container {
+      position: fixed;
+      top: var(--space-md);
+      right: var(--space-md);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .toast {
+      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-md);
+      min-width: 280px;
+      max-width: 420px;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      animation: toastIn 0.3s ease;
+      border-left: 4px solid var(--info);
+    }
+    .toast.success { border-left-color: var(--success); }
+    .toast.error   { border-left-color: var(--danger); }
+    .toast.warning { border-left-color: var(--warning); }
+    .toast-icon { font-size: 1.2rem; }
+    .toast-content { flex: 1; font-size: 0.875rem; }
+    .toast-close {
+      background: none; border: none;
+      cursor: pointer; color: var(--neutral-500);
+      font-size: 1.1rem; padding: 0;
+    }
+    @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    .hidden { display: none !important; }
+    .text-muted { color: var(--neutral-500); font-size: 0.85rem; }
+    .text-small { font-size: 0.8rem; }
+    .spacer { flex: 1; }
+
+    @media (max-width: 768px) {
+      .app-header { padding: var(--space-sm) var(--space-md); }
+      .app-header-user-info { display: none; }
+      .app-main { padding: var(--space-md); }
+      .panel-header { flex-direction: column; gap: var(--space-md); align-items: stretch; }
+      .panel-actions { flex-direction: column; }
+      .notif-panel { width: calc(100vw - 32px); right: -8px; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.5rem; }
+      .actions-cell { flex-direction: column; }
+      .modal { width: 95%; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🔐 Plateforme Sécurisée FSAIP</h1>
-    <p class="subtitle">POC — Module de demandes de documents avec RBAC, chiffrement AES-256-GCM et audit immuable</p>
 
-    <!-- Section Connexion -->
-    <div id="loginSection">
-      <h2 style="margin-bottom: 15px;">Connexion</h2>
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="56" height="56" rx="12" fill="#0a2540"/>
+        <path d="M28 14 L40 20 V32 C40 38 28 44 28 44 C28 44 16 38 16 32 V20 L28 14 Z" stroke="#d4af37" stroke-width="2.5" fill="none"/>
+        <path d="M22 28 L26 32 L34 24" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <h1>Plateforme Sécurisée FSAIP</h1>
+      <p>Transfert sécurisé de documents</p>
+    </div>
 
-      <label for="loginEmail">Adresse email :</label>
+    <div class="form-group">
+      <label for="loginEmail">Adresse email</label>
       <input type="email" id="loginEmail" placeholder="nom.prenom@fsaip.fr" autocomplete="username">
+    </div>
 
-      <label for="loginPassword">Mot de passe :</label>
+    <div class="form-group">
+      <label for="loginPassword">Mot de passe</label>
       <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
-
-      <button onclick="login()">Se connecter</button>
-      <div id="loginMessage"></div>
-
-      <details style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 4px;">
-        <summary style="cursor: pointer; font-weight: 600; color: #2c3e50;">
-          🧪 Comptes de test (cliquer pour afficher)
-        </summary>
-        <div style="margin-top: 15px; font-size: 13px;">
-          <p style="color: #7f8c8d; margin-bottom: 10px;">
-            Cliquez sur une ligne pour remplir automatiquement le formulaire.
-          </p>
-          <table style="width: 100%;">
-            <thead>
-              <tr><th>Rôle</th><th>Email</th><th>Mot de passe</th></tr>
-            </thead>
-            <tbody>
-              <tr onclick="fillLogin('admin@fsaip.fr','admin123')" style="cursor: pointer;">
-                <td><span class="badge badge-admin">admin</span></td>
-                <td>admin@fsaip.fr</td>
-                <td>admin123</td>
-              </tr>
-              <tr onclick="fillLogin('marie.scolarite@fsaip.fr','marie123')" style="cursor: pointer;">
-                <td><span class="badge badge-administration">administration</span> Scolarité</td>
-                <td>marie.scolarite@fsaip.fr</td>
-                <td>marie123</td>
-              </tr>
-              <tr onclick="fillLogin('anne.scolarite@fsaip.fr','anne123')" style="cursor: pointer;">
-                <td><span class="badge badge-administration">administration</span> Scolarité</td>
-                <td>anne.scolarite@fsaip.fr</td>
-                <td>anne123</td>
-              </tr>
-              <tr onclick="fillLogin('paul.compta@fsaip.fr','paul123')" style="cursor: pointer;">
-                <td><span class="badge badge-administration">administration</span> Compta</td>
-                <td>paul.compta@fsaip.fr</td>
-                <td>paul123</td>
-              </tr>
-              <tr onclick="fillLogin('sophie.compta@fsaip.fr','sophie123')" style="cursor: pointer;">
-                <td><span class="badge badge-administration">administration</span> Compta</td>
-                <td>sophie.compta@fsaip.fr</td>
-                <td>sophie123</td>
-              </tr>
-              <tr onclick="fillLogin('josue.etudiant@fsaip.fr','josue123')" style="cursor: pointer;">
-                <td><span class="badge badge-etudiant_interne">étudiant</span></td>
-                <td>josue.etudiant@fsaip.fr</td>
-                <td>josue123</td>
-              </tr>
-              <tr onclick="fillLogin('professeur@fsaip.fr','prof123')" style="cursor: pointer;">
-                <td><span class="badge badge-prof">prof</span></td>
-                <td>professeur@fsaip.fr</td>
-                <td>prof123</td>
-              </tr>
-              <tr onclick="fillLogin('externe@fsaip.fr','externe123')" style="cursor: pointer;">
-                <td><span class="badge badge-externe">externe</span></td>
-                <td>externe@fsaip.fr</td>
-                <td>externe123</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
     </div>
-    <!-- Section Dashboard -->
-    <div id="dashboard" class="hidden">
-      <div class="user-info">
-        <div class="user-info-left">
-          <span id="currentUserName"></span>
-          <span id="currentRole" class="badge"></span>
-          <span id="currentService" class="badge badge-service hidden"></span>
-        </div>
-        <div style="display: flex; align-items: center;">
-          <div class="notif-bell" onclick="toggleNotifs()">
-            🔔
-            <span id="notifBadge" class="notif-badge hidden">0</span>
-          </div>
-          <button class="danger" onclick="logout()">Déconnexion</button>
-        </div>
-      </div>
 
-      <div id="notifPanel" class="notif-panel">
-        <div style="padding: 10px; background: #f8f9fa; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between;">
-          <strong>Notifications</strong>
-          <button style="padding: 3px 8px; font-size: 11px;" onclick="markAllRead()">Tout marquer lu</button>
-        </div>
-        <div id="notifList"></div>
-      </div>
+    <button class="btn btn-primary btn-block" onclick="login()">Se connecter</button>
 
-      <!-- Tabs dynamiques selon rôle -->
-      <div class="tabs" id="tabs"></div>
-
-      <div id="messages"></div>
-
-      <!-- Panels (un par tab) -->
-      <div id="panelDemandes" class="panel hidden"></div>
-      <div id="panelDocuments" class="panel hidden"></div>
-      <div id="panelAudit" class="panel hidden"></div>
-      <div id="panelPurge" class="panel hidden"></div>
-    </div>
+    <details class="test-accounts">
+      <summary>🧪 Comptes de test (cliquer pour afficher)</summary>
+      <div class="test-accounts-list" id="testAccountsList"></div>
+    </details>
   </div>
+</div>
 
-  <!-- Modal créer demande -->
-  <div id="modalCreerDemande" class="modal-overlay">
-    <div class="modal">
-      <h3>📨 Nouvelle demande</h3>
-      <label>Destinataire :</label>
-      <select id="dmd_destinataire"></select>
+<div id="app" class="app hidden">
+  <header class="app-header">
+    <div class="app-header-brand">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 4 L24 8 V16 C24 20 14 24 14 24 C14 24 4 20 4 16 V8 L14 4 Z" stroke="#d4af37" stroke-width="2" fill="none"/>
+      </svg>
+      FSAIP
+    </div>
 
-      <label>Type de demande :</label>
-      <select id="dmd_type">
-        <option value="upload_simple">Upload simple (le destinataire fournit un doc)</option>
-        <option value="remplir_document">Remplir un document (vous fournissez un modèle à remplir)</option>
-      </select>
+    <div class="app-header-user">
+      <div class="app-header-user-info">
+        <div class="app-header-user-name" id="currentUserName"></div>
+        <div class="app-header-user-role">
+          <span id="currentRoleLabel"></span>
+          <span id="currentServiceLabel"></span>
+        </div>
+      </div>
 
-      <div id="dmd_modele_zone" class="hidden">
-        <label>Document modèle à remplir :</label>
-        <select id="dmd_modele">
-          <option value="">— Choisir un de vos documents modèles —</option>
+      <div class="notif-bell-wrapper">
+        <button class="notif-bell" onclick="toggleNotifs()">🔔
+          <span id="notifBadge" class="notif-badge hidden">0</span>
+        </button>
+        <div id="notifPanel" class="notif-panel">
+          <div class="notif-panel-header">
+            <span>Notifications</span>
+            <button class="btn btn-ghost btn-sm" onclick="markAllRead()">Tout marquer lu</button>
+          </div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary btn-sm" onclick="logout()">Déconnexion</button>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <div class="tabs" id="tabs"></div>
+
+    <div id="panelDemandes"  class="hidden"></div>
+    <div id="panelDocuments" class="hidden"></div>
+    <div id="panelAudit"     class="hidden"></div>
+    <div id="panelPurge"     class="hidden"></div>
+  </main>
+</div>
+
+<div id="modalCreerDemande" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header"><h3>📨 Nouvelle demande</h3></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Destinataire</label>
+        <select id="dmd_destinataire"></select>
+      </div>
+      <div class="form-group">
+        <label>Type de demande</label>
+        <select id="dmd_type" onchange="onTypeDemandeChange()">
+          <option value="upload_simple">Upload simple (le destinataire fournit un document)</option>
+          <option value="remplir_document">Remplir un document (vous fournissez un modèle)</option>
         </select>
-        <p style="font-size: 12px; color: #7f8c8d; margin-top: -10px;">
-          Pour fournir un nouveau modèle, uploadez-le d'abord via l'onglet "Mes documents modèles".
-        </p>
       </div>
-
-      <label>Titre :</label>
-      <input type="text" id="dmd_titre" placeholder="Ex: Pièce d'identité">
-
-      <label>Description :</label>
-      <textarea id="dmd_description" placeholder="Détails de la demande..."></textarea>
-
-      <p style="font-size: 12px; color: #7f8c8d;">⏰ Date limite automatique : +14 jours.</p>
-
-      <div class="modal-actions">
-        <button class="secondary" onclick="closeModal('modalCreerDemande')">Annuler</button>
-        <button class="success" onclick="creerDemande()">Créer</button>
+      <div class="form-group hidden" id="dmd_modele_zone">
+        <label>Document modèle</label>
+        <select id="dmd_modele"></select>
+        <p class="text-muted text-small" style="margin-top: 4px;">Uploadez d'abord un modèle via l'onglet Documents.</p>
       </div>
+      <div class="form-group">
+        <label>Titre</label>
+        <input type="text" id="dmd_titre" placeholder="Ex: Pièce d'identité">
+      </div>
+      <div class="form-group">
+        <label>Description (optionnel)</label>
+        <textarea id="dmd_description" placeholder="Détails complémentaires..."></textarea>
+      </div>
+      <p class="text-muted text-small">⏰ Date limite automatique : +14 jours</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalCreerDemande')">Annuler</button>
+      <button class="btn btn-success" onclick="creerDemande()">Créer</button>
     </div>
   </div>
+</div>
 
-  <!-- Modal upload modèle -->
-  <div id="modalUploadModele" class="modal-overlay">
-    <div class="modal">
-      <h3>📤 Uploader un document modèle</h3>
-      <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">
-        Ce document servira de modèle à remplir pour un destinataire.
+<div id="modalUploadModele" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header"><h3>📤 Uploader un document modèle</h3></div>
+    <div class="modal-body">
+      <p class="text-muted" style="margin-bottom: 16px;">Ce document servira de modèle à remplir pour un destinataire.</p>
+      <div class="form-group">
+        <input type="file" id="modele_file">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalUploadModele')">Annuler</button>
+      <button class="btn btn-success" onclick="uploadModele()">Uploader</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalUploadReponse" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header"><h3>📤 Déposer un document</h3></div>
+    <div class="modal-body">
+      <p id="rep_titre_demande" class="text-muted" style="margin-bottom: 16px;"></p>
+      <div class="form-group">
+        <input type="file" id="rep_file">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalUploadReponse')">Annuler</button>
+      <button class="btn btn-success" onclick="uploadReponse()">Déposer</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script>
+const API = window.location.origin + '/api';
+let token = null;
+let currentUser = null;
+let currentDemandeId = null;
+
+const COMPTES_TEST = [
+  { email: 'admin@fsaip.fr',              password: 'admin123',    label: 'Admin Demo',         role: 'admin' },
+  { email: 'marie.scolarite@fsaip.fr',    password: 'marie123',    label: 'Marie Dupont',       role: 'administration', service: 'Scolarité' },
+  { email: 'anne.scolarite@fsaip.fr',     password: 'anne123',     label: 'Anne Martin',        role: 'administration', service: 'Scolarité' },
+  { email: 'paul.compta@fsaip.fr',        password: 'paul123',     label: 'Paul Bernard',       role: 'administration', service: 'Comptabilité' },
+  { email: 'sophie.compta@fsaip.fr',      password: 'sophie123',   label: 'Sophie Petit',       role: 'administration', service: 'Comptabilité' },
+  { email: 'josue.etudiant@fsaip.fr',     password: 'josue123',    label: 'Josué Locossa',      role: 'etudiant_interne' },
+  { email: 'professeur@fsaip.fr',         password: 'prof123',     label: 'Sophie Durand',      role: 'prof' },
+  { email: 'externe@fsaip.fr',            password: 'externe123',  label: 'Lucas Bernard',      role: 'externe' },
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderTestAccounts();
+  document.getElementById('loginPassword').addEventListener('keypress', e => {
+    if (e.key === 'Enter') login();
+  });
+});
+
+function renderTestAccounts() {
+  const list = document.getElementById('testAccountsList');
+  list.innerHTML = COMPTES_TEST.map(c => `
+    <div class="test-account-row" onclick="fillLogin('${c.email}','${c.password}')">
+      <div class="test-account-info">
+        <div class="test-account-email">${escapeHtml(c.label)} <span class="badge badge-${c.role}">${c.role}</span>${c.service ? ' <span class="badge badge-service">' + escapeHtml(c.service) + '</span>' : ''}</div>
+        <div class="test-account-pwd">${c.email} · ${c.password}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function fillLogin(email, password) {
+  document.getElementById('loginEmail').value = email;
+  document.getElementById('loginPassword').value = password;
+}
+
+async function login() {
+  const email    = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  if (!email || !password) {
+    toast('Email et mot de passe requis', 'error');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erreur de connexion');
+
+    token = data.token;
+    currentUser = data.user;
+
+    document.getElementById('currentUserName').textContent = `${currentUser.prenom} ${currentUser.nom}`;
+    document.getElementById('currentRoleLabel').innerHTML = `<span class="badge badge-${currentUser.role}">${currentUser.role}</span>`;
+    if (currentUser.service) {
+      document.getElementById('currentServiceLabel').innerHTML = ` <span class="badge badge-service">${escapeHtml(currentUser.service)}</span>`;
+    } else {
+      document.getElementById('currentServiceLabel').innerHTML = '';
+    }
+
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    document.getElementById('loginPassword').value = '';
+
+    buildTabs();
+    loadNotifications();
+    setInterval(loadNotifications, 30000);
+
+    toast(`Bienvenue, ${currentUser.prenom} !`, 'success');
+  } catch (err) {
+    toast(err.message, 'error');
+  }
+}
+
+function logout() {
+  token = null;
+  currentUser = null;
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('app').classList.add('hidden');
+}
+
+function buildTabs() {
+  const role = currentUser.role;
+  let tabs = [];
+
+  if (role === 'admin') {
+    tabs = [
+      { id: 'demandes',  label: '📨 Toutes les demandes' },
+      { id: 'documents', label: '📄 Tous les documents' },
+      { id: 'audit',     label: '📋 Audit Log' },
+      { id: 'purge',     label: '🧹 Purge' },
+    ];
+  } else if (role === 'administration') {
+    tabs = [
+      { id: 'demandes',  label: '📨 Demandes du service' },
+      { id: 'documents', label: '📄 Documents' },
+    ];
+  } else {
+    tabs = [
+      { id: 'demandes',  label: '📥 Mes demandes' },
+      { id: 'documents', label: '📄 Mes documents' },
+    ];
+  }
+
+  document.getElementById('tabs').innerHTML = tabs.map((t, i) =>
+    `<div class="tab ${i === 0 ? 'active' : ''}" data-tab="${t.id}" onclick="showTab('${t.id}', event)">${t.label}</div>`
+  ).join('');
+
+  showTab(tabs[0].id);
+}
+
+function showTab(tabId, event) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (event && event.target) event.target.classList.add('active');
+  else document.querySelector(`[data-tab="${tabId}"]`)?.classList.add('active');
+
+  ['demandes', 'documents', 'audit', 'purge'].forEach(id => {
+    document.getElementById('panel' + id[0].toUpperCase() + id.slice(1))?.classList.add('hidden');
+  });
+
+  const panel = document.getElementById('panel' + tabId[0].toUpperCase() + tabId.slice(1));
+  panel?.classList.remove('hidden');
+
+  if (tabId === 'demandes')  renderDemandes();
+  if (tabId === 'documents') renderDocuments();
+  if (tabId === 'audit')     renderAudit();
+  if (tabId === 'purge')     renderPurge();
+}
+
+async function renderDemandes() {
+  const panel = document.getElementById('panelDemandes');
+  const isAdministration = currentUser.role === 'administration';
+
+  panel.innerHTML = `
+    <div class="panel-header">
+      <h2>📨 Demandes</h2>
+      <div class="panel-actions">
+        ${isAdministration ? '<button class="btn btn-success" onclick="openCreerDemande()">+ Nouvelle demande</button>' : ''}
+        <button class="btn btn-secondary" onclick="renderDemandes()">🔄 Rafraîchir</button>
+      </div>
+    </div>
+    <div id="demandesContent" class="card"></div>
+  `;
+
+  try {
+    const res = await fetch(`${API}/requests`, { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    const content = document.getElementById('demandesContent');
+    if (!data.demandes.length) {
+      content.innerHTML = emptyState('Aucune demande pour le moment');
+      return;
+    }
+
+    content.innerHTML = `
+      <table>
+        <thead>
+          <tr><th>Titre</th><th>Type</th><th>Émetteur</th><th>Destinataire</th><th>Statut</th><th>Date limite</th><th>Actions</th></tr>
+        </thead>
+        <tbody>${data.demandes.map(d => demandeRow(d)).join('')}</tbody>
+      </table>
+    `;
+  } catch (err) {
+    toast(err.message, 'error');
+  }
+}
+
+function demandeRow(d) {
+  const role = currentUser.role;
+  let actions = '';
+  if (d.destinataire_id === currentUser.id && d.statut === 'en_attente') {
+    actions += `<button class="btn btn-success btn-sm" onclick="openUploadReponse(${d.id}, '${escapeJs(d.titre)}')">📤 Déposer</button>`;
+  }
+  if (role === 'admin' || (role === 'administration' && d.service_id === currentUser.service_id)) {
+    actions += `<button class="btn btn-danger btn-sm" onclick="supprimerDemande(${d.id})">🗑️</button>`;
+  }
+  if (d.type_demande === 'remplir_document' && d.document_modele_id) {
+    actions += `<button class="btn btn-secondary btn-sm" onclick="downloadDoc(${d.document_modele_id})">📥 Modèle</button>`;
+  }
+  return `
+    <tr>
+      <td><strong>${escapeHtml(d.titre)}</strong><br><span class="text-muted text-small">${escapeHtml(d.description || '')}</span></td>
+      <td>${d.type_demande === 'remplir_document' ? '📝 À remplir' : '📤 Upload'}</td>
+      <td>${escapeHtml(d.emetteur_nom)}<br><span class="text-muted text-small">${escapeHtml(d.service_nom || '')}</span></td>
+      <td>${escapeHtml(d.destinataire_nom)}<br><span class="badge badge-${d.destinataire_role}">${d.destinataire_role}</span></td>
+      <td><span class="status status-${d.statut}">${d.statut === 'fait' ? '✅ Fait' : '⏳ En attente'}</span></td>
+      <td>${new Date(d.date_limite).toLocaleDateString('fr-FR')}</td>
+      <td><div class="actions-cell">${actions || '<span class="text-muted">—</span>'}</div></td>
+    </tr>
+  `;
+}
+
+function openCreerDemande() {
+  fetch(`${API}/users`, { headers: { Authorization: `Bearer ${token}` } })
+    .then(r => r.json())
+    .then(data => {
+      const sel = document.getElementById('dmd_destinataire');
+      sel.innerHTML = '<option value="">— Choisir —</option>' +
+        data.utilisateurs.map(u => `<option value="${u.id}">${escapeHtml(u.prenom)} ${escapeHtml(u.nom)} (${u.role})</option>`).join('');
+    });
+  fetch(`${API}/documents`, { headers: { Authorization: `Bearer ${token}` } })
+    .then(r => r.json())
+    .then(data => {
+      const sel = document.getElementById('dmd_modele');
+      const mesModeles = data.documents.filter(d => d.uploader_id === currentUser.id);
+      sel.innerHTML = '<option value="">— Choisir un modèle —</option>' +
+        mesModeles.map(d => `<option value="${d.id}">${escapeHtml(d.nom_fichier)}</option>`).join('');
+    });
+
+  document.getElementById('dmd_titre').value = '';
+  document.getElementById('dmd_description').value = '';
+  document.getElementById('dmd_type').value = 'upload_simple';
+  document.getElementById('dmd_modele_zone').classList.add('hidden');
+  openModal('modalCreerDemande');
+}
+
+function onTypeDemandeChange() {
+  const zone = document.getElementById('dmd_modele_zone');
+  if (document.getElementById('dmd_type').value === 'remplir_document') zone.classList.remove('hidden');
+  else zone.classList.add('hidden');
+}
+
+async function creerDemande() {
+  const destinataire_id = document.getElementById('dmd_destinataire').value;
+  const type_demande    = document.getElementById('dmd_type').value;
+  const titre           = document.getElementById('dmd_titre').value;
+  const description     = document.getElementById('dmd_description').value;
+  const document_modele_id = document.getElementById('dmd_modele').value || null;
+
+  if (!destinataire_id || !titre) {
+    toast('Destinataire et titre sont requis', 'error');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/requests`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ destinataire_id: parseInt(destinataire_id), type_demande, titre, description, document_modele_id: document_modele_id ? parseInt(document_modele_id) : null })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    closeModal('modalCreerDemande');
+    toast('Demande créée et notification envoyée', 'success');
+    renderDemandes();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function supprimerDemande(id) {
+  if (!confirm('Supprimer cette demande ? Les documents associés seront aussi supprimés.')) return;
+  try {
+    const res = await fetch(`${API}/requests/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    toast('Demande supprimée', 'success');
+    renderDemandes();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+function openUploadReponse(demandeId, titre) {
+  currentDemandeId = demandeId;
+  document.getElementById('rep_titre_demande').textContent = `Demande : ${titre}`;
+  document.getElementById('rep_file').value = '';
+  openModal('modalUploadReponse');
+}
+
+async function uploadReponse() {
+  const file = document.getElementById('rep_file').files[0];
+  if (!file) { toast('Sélectionnez un fichier', 'error'); return; }
+  const formData = new FormData();
+  formData.append('fichier', file);
+  formData.append('demande_id', currentDemandeId);
+  try {
+    const res = await fetch(`${API}/documents/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    closeModal('modalUploadReponse');
+    toast('Document déposé avec succès', 'success');
+    renderDemandes();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function renderDocuments() {
+  const panel = document.getElementById('panelDocuments');
+  const isAdministration = currentUser.role === 'administration';
+  panel.innerHTML = `
+    <div class="panel-header">
+      <h2>📄 Documents</h2>
+      <div class="panel-actions">
+        ${isAdministration ? '<button class="btn btn-success" onclick="openModal(\'modalUploadModele\')">+ Uploader un modèle</button>' : ''}
+        <button class="btn btn-secondary" onclick="renderDocuments()">🔄 Rafraîchir</button>
+      </div>
+    </div>
+    <div id="documentsContent" class="card"></div>
+  `;
+  try {
+    const res = await fetch(`${API}/documents`, { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    const content = document.getElementById('documentsContent');
+    if (!data.documents.length) {
+      content.innerHTML = emptyState('Aucun document');
+      return;
+    }
+    content.innerHTML = `
+      <table>
+        <thead><tr><th>Nom</th><th>Contexte</th><th>Demande</th><th>Uploadé par</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${data.documents.map(d => `
+            <tr>
+              <td>📎 ${escapeHtml(d.nom_fichier)}</td>
+              <td>${d.contexte === 'modele' ? '📝 Modèle' : (d.contexte === 'reponse' ? '📥 Réponse' : '—')}</td>
+              <td>${d.demande_titre ? escapeHtml(d.demande_titre) : '<span class="text-muted">—</span>'}</td>
+              <td>${escapeHtml(d.uploader_nom || '')}</td>
+              <td>${new Date(d.cree_le).toLocaleString('fr-FR')}</td>
+              <td><div class="actions-cell">
+                ${currentUser.role !== 'admin' ? `<button class="btn btn-secondary btn-sm" onclick="downloadDoc(${d.id})">⬇️ Télécharger</button>` : ''}
+                ${currentUser.role === 'admin' ? `<button class="btn btn-danger btn-sm" onclick="supprimerDoc(${d.id})">🗑️</button>` : ''}
+              </div></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function uploadModele() {
+  const file = document.getElementById('modele_file').files[0];
+  if (!file) { toast('Sélectionnez un fichier', 'error'); return; }
+  const formData = new FormData();
+  formData.append('fichier', file);
+  formData.append('is_modele', 'true');
+  try {
+    const res = await fetch(`${API}/documents/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    closeModal('modalUploadModele');
+    toast('Modèle uploadé', 'success');
+    renderDocuments();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function downloadDoc(id) {
+  try {
+    const res = await fetch(`${API}/documents/${id}/download`, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error);
+    }
+    const cd = res.headers.get('Content-Disposition') || '';
+    const filename = cd.match(/filename="(.+)"/)?.[1] || 'document';
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+    toast('Téléchargement démarré', 'success');
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function supprimerDoc(id) {
+  if (!confirm('Supprimer ce document ?')) return;
+  try {
+    const res = await fetch(`${API}/documents/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    toast('Document supprimé', 'success');
+    renderDocuments();
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function renderAudit() {
+  const panel = document.getElementById('panelAudit');
+  panel.innerHTML = `
+    <div class="panel-header">
+      <h2>📋 Audit Log <span class="text-muted text-small">(immuable, hash chaîné)</span></h2>
+      <div class="panel-actions"><button class="btn btn-secondary" onclick="renderAudit()">🔄 Rafraîchir</button></div>
+    </div>
+    <div id="auditContent" class="card"></div>
+  `;
+  try {
+    const res = await fetch(`${API}/audit`, { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    document.getElementById('auditContent').innerHTML = `
+      <table>
+        <thead><tr><th>ID</th><th>Utilisateur</th><th>Action</th><th>Ressource</th><th>Date</th></tr></thead>
+        <tbody>${data.logs.map(l => `
+          <tr>
+            <td><span class="text-muted">#${l.id}</span></td>
+            <td>${escapeHtml(l.email || '?')}</td>
+            <td><strong>${escapeHtml(l.action)}</strong></td>
+            <td>${escapeHtml(l.type_ressource || '-')}</td>
+            <td>${new Date(l.cree_le).toLocaleString('fr-FR')}</td>
+          </tr>`).join('')}</tbody>
+      </table>
+    `;
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+function renderPurge() {
+  document.getElementById('panelPurge').innerHTML = `
+    <div class="panel-header"><h2>🧹 Purge des demandes expirées</h2></div>
+    <div class="card" style="padding: 24px;">
+      <p style="margin-bottom: 16px; color: var(--neutral-700);">
+        Cette action lance la purge des demandes dont la date limite est dépassée.
+        Les documents associés (BDD + fichiers chiffrés sur le NAS) et les notifications liées seront supprimés en cascade.
       </p>
-      <input type="file" id="modele_file">
-      <div class="modal-actions">
-        <button class="secondary" onclick="closeModal('modalUploadModele')">Annuler</button>
-        <button class="success" onclick="uploadModele()">Uploader</button>
-      </div>
+      <button class="btn btn-danger" onclick="lancerPurge()">🧹 Lancer la purge manuelle</button>
+      <div id="purgeResult" style="margin-top: 16px;"></div>
     </div>
-  </div>
+  `;
+}
 
-  <!-- Modal upload réponse -->
-  <div id="modalUploadReponse" class="modal-overlay">
-    <div class="modal">
-      <h3>📤 Déposer un document en réponse</h3>
-      <p id="rep_titre_demande" style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;"></p>
-      <input type="file" id="rep_file">
-      <div class="modal-actions">
-        <button class="secondary" onclick="closeModal('modalUploadReponse')">Annuler</button>
-        <button class="success" onclick="uploadReponse()">Déposer</button>
+async function lancerPurge() {
+  try {
+    const res = await fetch(`${API}/admin/purge`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    document.getElementById('purgeResult').innerHTML = `
+      <div class="card" style="padding: 16px; background: var(--success-bg); border-left: 4px solid var(--success);">
+        ✅ ${escapeHtml(data.message)}<br>
+        Demandes supprimées : <strong>${data.demandes_supprimees}</strong><br>
+        Documents supprimés : <strong>${data.documents_supprimes}</strong>
       </div>
+    `;
+    toast('Purge effectuée', 'success');
+  } catch (err) { toast(err.message, 'error'); }
+}
+
+async function loadNotifications() {
+  if (!token) return;
+  try {
+    const res = await fetch(`${API}/notifications`, { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    if (!res.ok) return;
+
+    const badge = document.getElementById('notifBadge');
+    if (data.non_lues > 0) {
+      badge.textContent = data.non_lues;
+      badge.classList.remove('hidden');
+    } else badge.classList.add('hidden');
+
+    const list = document.getElementById('notifList');
+    if (!data.notifications.length) {
+      list.innerHTML = '<div class="empty-state"><p>Aucune notification</p></div>';
+      return;
+    }
+    list.innerHTML = data.notifications.map(n => `
+      <div class="notif-item ${n.lue ? '' : 'unread'}" onclick="markRead(${n.id})">
+        <div class="notif-item-title">${escapeHtml(n.titre)}</div>
+        ${n.message ? `<div class="notif-item-msg">${escapeHtml(n.message)}</div>` : ''}
+        <div class="notif-item-time">${new Date(n.cree_le).toLocaleString('fr-FR')}</div>
+      </div>`).join('');
+  } catch (err) { console.error(err); }
+}
+
+function toggleNotifs() {
+  document.getElementById('notifPanel').classList.toggle('open');
+}
+
+async function markRead(id) {
+  await fetch(`${API}/notifications/${id}/read`, { method: 'PATCH', headers: { Authorization: `Bearer ${token}` } });
+  loadNotifications();
+}
+
+async function markAllRead() {
+  await fetch(`${API}/notifications/read-all`, { method: 'PATCH', headers: { Authorization: `Bearer ${token}` } });
+  loadNotifications();
+  toast('Toutes les notifications marquées comme lues', 'success');
+}
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function emptyState(msg) {
+  return `
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M9 4v18"/>
+      </svg>
+      <p>${escapeHtml(msg)}</p>
     </div>
-  </div>
+  `;
+}
+
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+  t.innerHTML = `
+    <span class="toast-icon">${icons[type] || icons.info}</span>
+    <div class="toast-content">${escapeHtml(msg)}</div>
+    <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+  `;
+  container.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function escapeJs(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/['\\]/g, c => '\\' + c);
+}
+</script>
 
-  <script>
-    const API = 'http://localhost:3000/api';
-    let token = null;
-    let currentUser = null;
-    let currentDemandeId = null;
-
-    // ════════════════════════════════════════
-    // AUTH
-    // ════════════════════════════════════════
-    async function login() {
-      const email    = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-
-      if (!email || !password) {
-        showMessage('loginMessage', 'Email et mot de passe requis', 'error');
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API}/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Erreur de connexion');
-
-        token = data.token;
-        currentUser = data.user;
-
-        document.getElementById('currentUserName').textContent =
-          `${currentUser.prenom} ${currentUser.nom}`;
-        const badge = document.getElementById('currentRole');
-        badge.textContent = currentUser.role;
-        badge.className = `badge badge-${currentUser.role}`;
-
-        const serviceBadge = document.getElementById('currentService');
-        if (currentUser.service) {
-          serviceBadge.textContent = '🏢 ' + currentUser.service;
-          serviceBadge.classList.remove('hidden');
-        } else {
-          serviceBadge.classList.add('hidden');
-        }
-
-        document.getElementById('loginSection').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-
-        buildTabs();
-        loadNotifications();
-        setInterval(loadNotifications, 30000);
-
-        // Nettoyer le formulaire de login après usage (sécurité)
-        document.getElementById('loginPassword').value = '';
-      } catch (err) {
-        showMessage('loginMessage', err.message, 'error');
-      }
-    }
-
-    function fillLogin(email, password) {
-      document.getElementById('loginEmail').value = email;
-      document.getElementById('loginPassword').value = password;
-    }
-
-    function logout() {
-      token = null;
-      currentUser = null;
-      document.getElementById('loginEmail').value = '';
-      document.getElementById('loginPassword').value = '';
-      document.getElementById('loginSection').classList.remove('hidden');
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('loginMessage').innerHTML = '';
-    }
-    // ════════════════════════════════════════
-    // TABS (selon rôle)
-    // ════════════════════════════════════════
-    function buildTabs() {
-      const tabsEl = document.getElementById('tabs');
-      const role = currentUser.role;
-      let tabs = [];
-
-      if (role === 'admin') {
-        tabs = [
-          { id: 'demandes',  label: '📨 Toutes les demandes' },
-          { id: 'documents', label: '📄 Tous les documents' },
-          { id: 'audit',     label: '📋 Audit Log' },
-          { id: 'purge',     label: '🧹 Purge' },
-        ];
-      } else if (role === 'administration') {
-        tabs = [
-          { id: 'demandes',  label: '📨 Demandes du service' },
-          { id: 'documents', label: '📄 Documents' },
-        ];
-      } else {
-        // etudiant_interne / prof / externe
-        tabs = [
-          { id: 'demandes',  label: '📥 Mes demandes reçues' },
-          { id: 'documents', label: '📄 Mes documents' },
-        ];
-      }
-
-      tabsEl.innerHTML = tabs.map((t, i) =>
-        `<div class="tab ${i === 0 ? 'active' : ''}" data-tab="${t.id}" onclick="showTab('${t.id}', event)">${t.label}</div>`
-      ).join('');
-
-      showTab(tabs[0].id);
-    }
-
-    function showTab(tabId, event) {
-      // Désactiver tous les tabs
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      if (event && event.target) event.target.classList.add('active');
-      else document.querySelector(`[data-tab="${tabId}"]`)?.classList.add('active');
-
-      // Cacher tous les panels
-      ['demandes', 'documents', 'audit', 'purge'].forEach(id => {
-        document.getElementById('panel' + id.charAt(0).toUpperCase() + id.slice(1))?.classList.add('hidden');
-      });
-
-      // Afficher et remplir le panel actif
-      const panel = document.getElementById('panel' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
-      if (panel) panel.classList.remove('hidden');
-
-      if (tabId === 'demandes')  renderDemandes();
-      if (tabId === 'documents') renderDocuments();
-      if (tabId === 'audit')     renderAudit();
-      if (tabId === 'purge')     renderPurge();
-    }
-
-    // ════════════════════════════════════════
-    // PANEL DEMANDES
-    // ════════════════════════════════════════
-    async function renderDemandes() {
-      const panel = document.getElementById('panelDemandes');
-      const isAdministration = currentUser.role === 'administration';
-
-      let html = '<h3>📨 Demandes</h3>';
-      if (isAdministration) {
-        html += '<button class="success" style="margin: 10px 0;" onclick="openCreerDemande()">+ Nouvelle demande</button>';
-      }
-      html += '<button class="secondary" style="margin: 10px 0 10px 10px;" onclick="renderDemandes()">🔄 Rafraîchir</button>';
-      html += '<div id="demandesContent"></div>';
-      panel.innerHTML = html;
-
-      try {
-        const res = await fetch(`${API}/requests`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        const content = document.getElementById('demandesContent');
-        if (!data.demandes.length) {
-          content.innerHTML = '<div class="empty-state">Aucune demande</div>';
-          return;
-        }
-
-        content.innerHTML = `
-          <table>
-            <thead>
-              <tr>
-                <th>Titre</th>
-                <th>Type</th>
-                <th>Émetteur</th>
-                <th>Destinataire</th>
-                <th>Statut</th>
-                <th>Date limite</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.demandes.map(d => renderDemandeRow(d)).join('')}
-            </tbody>
-          </table>
-        `;
-      } catch (err) {
-        showMessage('messages', err.message, 'error');
-      }
-    }
-
-    function renderDemandeRow(d) {
-      const role = currentUser.role;
-      let actions = '';
-
-      // Destinataire : peut déposer un doc en réponse (si en_attente)
-      if (d.destinataire_id === currentUser.id && d.statut === 'en_attente') {
-        actions += `<button class="success" onclick="openUploadReponse(${d.id}, '${escapeJs(d.titre)}')">📤 Déposer</button>`;
-      }
-      // Administration de mon service ou admin : modifier/supprimer
-      if (role === 'admin' || (role === 'administration' && d.service_id === currentUser.service_id)) {
-        actions += `<button class="danger" onclick="supprimerDemande(${d.id})">🗑️</button>`;
-      }
-      // Si un modèle existe : on peut le télécharger
-      if (d.type_demande === 'remplir_document' && d.document_modele_id) {
-        actions += `<button onclick="downloadDoc(${d.document_modele_id})">📥 Modèle</button>`;
-      }
-
-      return `
-        <tr>
-          <td><strong>${escapeHtml(d.titre)}</strong><br><small>${escapeHtml(d.description || '')}</small></td>
-          <td>${d.type_demande === 'remplir_document' ? '📝 Remplir' : '📤 Upload'}</td>
-          <td>${escapeHtml(d.emetteur_nom)}<br><small>${escapeHtml(d.service_nom || '')}</small></td>
-          <td>${escapeHtml(d.destinataire_nom)}<br><small>${d.destinataire_role}</small></td>
-          <td class="status-${d.statut}">${d.statut === 'fait' ? '✅ Fait' : '⏳ En attente'}</td>
-          <td>${new Date(d.date_limite).toLocaleDateString('fr-FR')}</td>
-          <td class="actions">${actions}</td>
-        </tr>
-      `;
-    }
-
-    function openCreerDemande() {
-      // Charger les destinataires
-      fetch(`${API}/users`, { headers: { 'Authorization': `Bearer ${token}` } })
-        .then(r => r.json())
-        .then(data => {
-          const sel = document.getElementById('dmd_destinataire');
-          sel.innerHTML = '<option value="">— Choisir —</option>' +
-            data.utilisateurs.map(u =>
-              `<option value="${u.id}">${escapeHtml(u.prenom)} ${escapeHtml(u.nom)} (${u.role})</option>`
-            ).join('');
-        });
-
-      // Charger mes documents (pour les modèles éventuels)
-      fetch(`${API}/documents`, { headers: { 'Authorization': `Bearer ${token}` } })
-        .then(r => r.json())
-        .then(data => {
-          const sel = document.getElementById('dmd_modele');
-          const mesModeles = data.documents.filter(d => d.uploader_id === currentUser.id);
-          sel.innerHTML = '<option value="">— Choisir un modèle —</option>' +
-            mesModeles.map(d => `<option value="${d.id}">${escapeHtml(d.nom_fichier)}</option>`).join('');
-        });
-
-      // Afficher/cacher zone modèle selon le type
-      document.getElementById('dmd_type').onchange = function() {
-        const zone = document.getElementById('dmd_modele_zone');
-        if (this.value === 'remplir_document') zone.classList.remove('hidden');
-        else zone.classList.add('hidden');
-      };
-
-      // Reset
-      document.getElementById('dmd_titre').value = '';
-      document.getElementById('dmd_description').value = '';
-      document.getElementById('dmd_type').value = 'upload_simple';
-      document.getElementById('dmd_modele_zone').classList.add('hidden');
-
-      openModal('modalCreerDemande');
-    }
-
-    async function creerDemande() {
-      const destinataire_id = document.getElementById('dmd_destinataire').value;
-      const type_demande    = document.getElementById('dmd_type').value;
-      const titre           = document.getElementById('dmd_titre').value;
-      const description     = document.getElementById('dmd_description').value;
-      const document_modele_id = document.getElementById('dmd_modele').value || null;
-
-      if (!destinataire_id || !titre) {
-        alert('Destinataire et titre sont requis');
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API}/requests`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ destinataire_id: parseInt(destinataire_id), type_demande, titre, description, document_modele_id: document_modele_id ? parseInt(document_modele_id) : null })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        closeModal('modalCreerDemande');
-        showMessage('messages', '✅ Demande créée et email envoyé au destinataire', 'success');
-        renderDemandes();
-      } catch (err) {
-        alert('Erreur : ' + err.message);
-      }
-    }
-
-    async function supprimerDemande(id) {
-      if (!confirm('Supprimer cette demande ? Les documents en réponse seront aussi supprimés.')) return;
-      try {
-        const res = await fetch(`${API}/requests/${id}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-        showMessage('messages', '✅ Demande supprimée', 'success');
-        renderDemandes();
-      } catch (err) {
-        alert(err.message);
-      }
-    }
-
-    // ════════════════════════════════════════
-    // UPLOAD réponse à une demande
-    // ════════════════════════════════════════
-    function openUploadReponse(demandeId, titre) {
-      currentDemandeId = demandeId;
-      document.getElementById('rep_titre_demande').textContent = `Demande : ${titre}`;
-      document.getElementById('rep_file').value = '';
-      openModal('modalUploadReponse');
-    }
-
-    async function uploadReponse() {
-      const file = document.getElementById('rep_file').files[0];
-      if (!file) { alert('Sélectionnez un fichier'); return; }
-
-      const formData = new FormData();
-      formData.append('fichier', file);
-      formData.append('demande_id', currentDemandeId);
-
-      try {
-        const res = await fetch(`${API}/documents/upload`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-          body: formData
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        closeModal('modalUploadReponse');
-        showMessage('messages', '✅ ' + data.message, 'success');
-        renderDemandes();
-      } catch (err) {
-        alert('Erreur : ' + err.message);
-      }
-    }
-
-    // ════════════════════════════════════════
-    // PANEL DOCUMENTS
-    // ════════════════════════════════════════
-    async function renderDocuments() {
-      const panel = document.getElementById('panelDocuments');
-      const isAdministration = currentUser.role === 'administration';
-
-      let html = '<h3>📄 Documents</h3>';
-      if (isAdministration) {
-        html += '<button class="success" style="margin: 10px 0;" onclick="openModal(\'modalUploadModele\')">+ Uploader un modèle</button>';
-      }
-      html += '<button class="secondary" style="margin: 10px 0 10px 10px;" onclick="renderDocuments()">🔄 Rafraîchir</button>';
-      html += '<div id="documentsContent"></div>';
-      panel.innerHTML = html;
-
-      try {
-        const res = await fetch(`${API}/documents`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        const content = document.getElementById('documentsContent');
-        if (!data.documents.length) {
-          content.innerHTML = '<div class="empty-state">Aucun document</div>';
-          return;
-        }
-
-        content.innerHTML = `
-          <table>
-            <thead>
-              <tr>
-                <th>Nom</th>
-                <th>Contexte</th>
-                <th>Demande</th>
-                <th>Uploadé par</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.documents.map(d => `
-                <tr>
-                  <td>${escapeHtml(d.nom_fichier)}</td>
-                  <td>${d.contexte === 'modele' ? '📝 Modèle' : (d.contexte === 'reponse' ? '📥 Réponse' : '—')}</td>
-                  <td>${d.demande_titre ? escapeHtml(d.demande_titre) : '—'}</td>
-                  <td>${escapeHtml(d.uploader_nom || '')}</td>
-                  <td>${new Date(d.cree_le).toLocaleString('fr-FR')}</td>
-                  <td class="actions">
-                    ${currentUser.role !== 'admin' ? `<button onclick="downloadDoc(${d.id})">⬇️</button>` : ''}
-                    ${currentUser.role === 'admin' ? `<button class="danger" onclick="supprimerDoc(${d.id})">🗑️</button>` : ''}
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
-      } catch (err) {
-        showMessage('messages', err.message, 'error');
-      }
-    }
-
-    async function uploadModele() {
-      const file = document.getElementById('modele_file').files[0];
-      if (!file) { alert('Sélectionnez un fichier'); return; }
-
-      const formData = new FormData();
-      formData.append('fichier', file);
-      formData.append('is_modele', 'true');
-
-      try {
-        const res = await fetch(`${API}/documents/upload`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-          body: formData
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        closeModal('modalUploadModele');
-        showMessage('messages', '✅ Modèle uploadé', 'success');
-        renderDocuments();
-      } catch (err) {
-        alert('Erreur : ' + err.message);
-      }
-    }
-
-    async function downloadDoc(id) {
-      try {
-        const res = await fetch(`${API}/documents/${id}/download`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.error);
-        }
-        const cd = res.headers.get('Content-Disposition') || '';
-        const filename = cd.match(/filename="(.+)"/)?.[1] || 'document';
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = filename; a.click();
-        URL.revokeObjectURL(url);
-      } catch (err) {
-        alert('Erreur : ' + err.message);
-      }
-    }
-
-    async function supprimerDoc(id) {
-      if (!confirm('Supprimer ce document ?')) return;
-      try {
-        const res = await fetch(`${API}/documents/${id}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-        showMessage('messages', '✅ Document supprimé', 'success');
-        renderDocuments();
-      } catch (err) {
-        alert(err.message);
-      }
-    }
-
-    // ════════════════════════════════════════
-    // PANEL AUDIT
-    // ════════════════════════════════════════
-    async function renderAudit() {
-      const panel = document.getElementById('panelAudit');
-      panel.innerHTML = '<h3>📋 Audit Log (immuable, hash chaîné)</h3><button class="secondary" onclick="renderAudit()">🔄 Rafraîchir</button><div id="auditContent"></div>';
-
-      try {
-        const res = await fetch(`${API}/audit`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        document.getElementById('auditContent').innerHTML = `
-          <table>
-            <thead><tr><th>ID</th><th>Utilisateur</th><th>Action</th><th>Ressource</th><th>Date</th></tr></thead>
-            <tbody>
-              ${data.logs.map(l => `
-                <tr>
-                  <td>${l.id}</td>
-                  <td>${escapeHtml(l.email || '?')}</td>
-                  <td>${escapeHtml(l.action)}</td>
-                  <td>${escapeHtml(l.type_ressource || '-')}</td>
-                  <td>${new Date(l.cree_le).toLocaleString('fr-FR')}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
-      } catch (err) {
-        document.getElementById('auditContent').innerHTML = `<div class="message error">${err.message}</div>`;
-      }
-    }
-
-    // ════════════════════════════════════════
-    // PANEL PURGE
-    // ════════════════════════════════════════
-    function renderPurge() {
-      const panel = document.getElementById('panelPurge');
-      panel.innerHTML = `
-        <h3>🧹 Purge des demandes expirées</h3>
-        <p style="margin: 15px 0; color: #7f8c8d;">
-          Lance la purge des demandes dont la date limite est dépassée.
-          La cascade supprime les documents en réponse (BDD + fichiers chiffrés sur le NAS) et les notifications associées.
-        </p>
-        <button class="danger" onclick="lancerPurge()">🧹 Lancer la purge manuelle</button>
-        <div id="purgeResult"></div>
-      `;
-    }
-
-    async function lancerPurge() {
-      try {
-        const res = await fetch(`${API}/admin/purge`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        document.getElementById('purgeResult').innerHTML = `
-          <div class="message success">
-            ✅ ${data.message}<br>
-            Demandes supprimées : <strong>${data.demandes_supprimees}</strong><br>
-            Documents supprimés : <strong>${data.documents_supprimes}</strong>
-          </div>
-        `;
-      } catch (err) {
-        document.getElementById('purgeResult').innerHTML = `<div class="message error">${err.message}</div>`;
-      }
-    }
-
-    // ════════════════════════════════════════
-    // NOTIFICATIONS
-    // ════════════════════════════════════════
-    async function loadNotifications() {
-      if (!token) return;
-      try {
-        const res = await fetch(`${API}/notifications`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) return;
-
-        const badge = document.getElementById('notifBadge');
-        if (data.non_lues > 0) {
-          badge.textContent = data.non_lues;
-          badge.classList.remove('hidden');
-        } else {
-          badge.classList.add('hidden');
-        }
-
-        const list = document.getElementById('notifList');
-        if (!data.notifications.length) {
-          list.innerHTML = '<div class="empty-state">Aucune notification</div>';
-          return;
-        }
-        list.innerHTML = data.notifications.map(n => `
-          <div class="notif-item ${n.lue ? '' : 'unread'}" onclick="markRead(${n.id})">
-            <div class="notif-item-title">${escapeHtml(n.titre)}</div>
-            ${n.message ? `<div class="notif-item-message">${escapeHtml(n.message)}</div>` : ''}
-            <div class="notif-item-time">${new Date(n.cree_le).toLocaleString('fr-FR')}</div>
-          </div>
-        `).join('');
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    function toggleNotifs() {
-      document.getElementById('notifPanel').classList.toggle('open');
-    }
-
-    async function markRead(id) {
-      try {
-        await fetch(`${API}/notifications/${id}/read`, {
-          method: 'PATCH',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        loadNotifications();
-      } catch (err) { console.error(err); }
-    }
-
-    async function markAllRead() {
-      try {
-        await fetch(`${API}/notifications/read-all`, {
-          method: 'PATCH',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        loadNotifications();
-      } catch (err) { console.error(err); }
-    }
-
-    // ════════════════════════════════════════
-    // UTILS
-    // ════════════════════════════════════════
-    function openModal(id)  { document.getElementById(id).classList.add('open'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-    function showMessage(elId, msg, type) {
-      const el = document.getElementById(elId);
-      el.innerHTML = `<div class="message ${type}">${msg}</div>`;
-      setTimeout(() => el.innerHTML = '', 5000);
-    }
-
-    function escapeHtml(s) {
-      if (s === null || s === undefined) return '';
-      return String(s).replace(/[&<>"']/g, c => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-      }[c]));
-    }
-    function escapeJs(s) {
-      if (s === null || s === undefined) return '';
-      return String(s).replace(/['\\]/g, c => '\\' + c);
-    }
-  </script>
 </body>
 </html>
